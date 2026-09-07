@@ -1,0 +1,15 @@
+{
+  "name": "Little Forest",
+  "short_name": "Forest",
+  "description": "A cozy expense tracker that grows a little forest.",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#bfe3ad",
+  "theme_color": "#6cc24a",
+  "categories": ["finance", "lifestyle"],
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

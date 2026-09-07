@@ -1,0 +1,1673 @@
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>Little Forest</title>
+<meta name="description" content="A cozy expense tracker that grows a forest." />
+<meta name="theme-color" content="#6cc24a" />
+<link rel="manifest" href="manifest.webmanifest" />
+<link rel="apple-touch-icon" href="icon.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Patrick+Hand&display=swap" rel="stylesheet" />
+
+<style>
+/* ============================ TOKENS ============================ */
+:root {
+  /* bright & sunny — Animal-Crossing daytime */
+  --sky-top: #a6e2f5;
+  --sky-bot: #eafbcf;
+  --bg: #bfe3ad;
+  --frame: #eef7e6;
+  --surface: #fffef9;
+  --surface-2: #e9f2dc;
+  --line: #dce9cc;
+  --ink: #4a4029;
+  --ink-soft: #8f8560;
+  --leaf: #6cc24a;
+  --leaf-deep: #3f9e4d;
+  --leaf-lite: #a8e063;
+  --bloom: #ff9ec4;
+  --bloom-soft: #ffcfe1;
+  --sun: #ffcb52;
+  --sun-soft: #ffe7a3;
+  --bark: #b98a52;
+  --bark-deep: #8f5f33;
+  --ground: #7fce5f;
+  --ground-2: #5eb84a;
+  --good: #4caf5a;
+  --warn: #f0a83e;
+  --alert: #f0876a;
+  --shadow: 0 12px 30px -12px rgba(90,120,60,.30);
+  --shadow-soft: 0 8px 18px -10px rgba(90,120,60,.26);
+  --star: #fff;
+}
+:root:not([data-theme="light"]) {
+  @media (prefers-color-scheme: dark) {
+    --sky-top: #223142;
+    --sky-bot: #2b3540;
+    --bg: #1a211d;
+    --frame: #232c26;
+    --surface: #2b352d;
+    --surface-2: #333f36;
+    --line: #3c4a3f;
+    --ink: #efe6d3;
+    --ink-soft: #a9b6a4;
+    --leaf: #7bb673;
+    --leaf-deep: #5f9a58;
+    --leaf-lite: #a7d98d;
+    --bloom: #ef9bb0;
+    --bloom-soft: #6b4652;
+    --sun: #f0b56a;
+    --sun-soft: #4a4029;
+    --bark: #b0865b;
+    --bark-deep: #8a6141;
+    --ground: #4a5a3f;
+    --ground-2: #3d4b34;
+    --shadow: 0 12px 34px -14px rgba(0,0,0,.55);
+    --shadow-soft: 0 8px 20px -12px rgba(0,0,0,.5);
+    --star: #ffe9a8;
+  }
+}
+:root[data-theme="dark"] {
+  --sky-top: #223142; --sky-bot: #2b3540; --bg: #1a211d; --frame: #232c26;
+  --surface: #2b352d; --surface-2: #333f36; --line: #3c4a3f; --ink: #efe6d3;
+  --ink-soft: #a9b6a4; --leaf: #7bb673; --leaf-deep: #5f9a58; --leaf-lite: #a7d98d;
+  --bloom: #ef9bb0; --bloom-soft: #6b4652; --sun: #f0b56a; --sun-soft: #4a4029;
+  --bark: #b0865b; --bark-deep: #8a6141; --ground: #4a5a3f; --ground-2: #3d4b34;
+  --shadow: 0 12px 34px -14px rgba(0,0,0,.55); --shadow-soft: 0 8px 20px -12px rgba(0,0,0,.5);
+  --star: #ffe9a8;
+}
+
+* { box-sizing: border-box; }
+html, body { height: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Baloo 2", system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden;
+}
+button { font-family: inherit; cursor: pointer; }
+:focus-visible { outline: 3px solid var(--leaf); outline-offset: 2px; border-radius: 12px; }
+
+/* ============================ APP FRAME ============================ */
+#app-root { height: 100%; display: grid; place-items: center; }
+.phone {
+  width: 100%; max-width: 440px; height: 100%; max-height: 940px;
+  position: relative; display: flex; flex-direction: column;
+  background: var(--frame);
+  overflow: hidden;
+}
+@media (min-width: 480px) {
+  #app-root { padding: 18px; }
+  .phone { border-radius: 34px; box-shadow: var(--shadow); border: 1px solid var(--line); }
+}
+.screen { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.topbar { flex: none; }
+.scroll {
+  flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  padding: 0 16px calc(96px + env(safe-area-inset-bottom));
+}
+.scroll::-webkit-scrollbar { width: 0; }
+
+/* ============================ SHARED ============================ */
+.serif { font-family: "Patrick Hand", "Comic Sans MS", cursive; letter-spacing: .3px; }
+.tnum { font-variant-numeric: tabular-nums; }
+.eyebrow {
+  font-size: 11px; font-weight: 800; letter-spacing: .14em; text-transform: uppercase;
+  color: var(--ink-soft);
+}
+.card {
+  background: var(--surface); border: 1px solid var(--line);
+  border-radius: 22px; padding: 16px; box-shadow: var(--shadow-soft);
+}
+.topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 18px 18px 6px;
+}
+.brand { display: flex; align-items: center; gap: 9px; }
+.brand .logo {
+  width: 34px; height: 34px; border-radius: 12px; display: grid; place-items: center;
+  background: linear-gradient(160deg, var(--leaf-lite), var(--leaf));
+  box-shadow: inset 0 -3px 6px rgba(0,0,0,.12); font-size: 18px;
+}
+.brand h1 { font-size: 19px; margin: 0; font-weight: 600; letter-spacing: -.01em; }
+.iconbtn {
+  width: 40px; height: 40px; border-radius: 14px; border: 1px solid var(--line);
+  background: var(--surface); color: var(--ink); font-size: 17px; display: grid; place-items: center;
+  transition: transform .15s ease, background .2s;
+}
+.iconbtn:active { transform: scale(.92); }
+
+/* ============================ TREE SCENE ============================ */
+.scene-wrap { position: relative; }
+.scene {
+  position: relative; width: 100%; aspect-ratio: 1 / 1;
+  border-radius: 26px; overflow: hidden;
+  background: linear-gradient(180deg, var(--sky-top) 0%, var(--sky-bot) 78%);
+  border: 1px solid var(--line);
+}
+.scene.night { background: linear-gradient(180deg, #223142 0%, #34435a 70%, #3f4a5c 100%); }
+.scene svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.sun-orb {
+  position: absolute; top: 12%; right: 14%; width: 46px; height: 46px; border-radius: 50%;
+  background: radial-gradient(circle at 50% 45%, #fff5df, var(--sun));
+  box-shadow: 0 0 34px 10px rgba(235,169,92,.5); opacity: .85;
+}
+.night .sun-orb {
+  background: radial-gradient(circle at 40% 40%, #fffdf0, #f3e6b0);
+  box-shadow: 0 0 20px 4px rgba(255,247,214,.55); width: 34px; height: 34px; opacity: .9;
+}
+.tree-sway { transform-origin: 150px 250px; animation: sway 7s ease-in-out infinite; }
+@keyframes sway { 0%,100%{transform:rotate(-.8deg)} 50%{transform:rotate(.8deg)} }
+.leaf-fall { animation: leaffall 4.5s ease-in infinite; opacity: 0; }
+@keyframes leaffall {
+  0% { opacity: 0; transform: translate(0,0) rotate(0); }
+  10% { opacity: .9; }
+  100% { opacity: 0; transform: translate(-18px, 120px) rotate(220deg); }
+}
+.butterfly { animation: flutter 11s ease-in-out infinite; transform-origin: center; }
+@keyframes flutter {
+  0%   { transform: translate(0px, 0px); }
+  25%  { transform: translate(46px, -26px); }
+  50%  { transform: translate(12px, -54px); }
+  75%  { transform: translate(-40px, -20px); }
+  100% { transform: translate(0px, 0px); }
+}
+.bfly-wing { animation: flap .28s ease-in-out infinite alternate; transform-origin: 50% 50%; }
+@keyframes flap { from { transform: scaleX(1); } to { transform: scaleX(.4); } }
+.firefly { animation: glow 3.4s ease-in-out infinite, drift 9s ease-in-out infinite; }
+@keyframes glow { 0%,100%{opacity:.15} 50%{opacity:1} }
+@keyframes drift { 0%,100%{transform:translate(0,0)} 33%{transform:translate(14px,-16px)} 66%{transform:translate(-12px,-6px)} }
+.bee { animation: buzz 6s linear infinite; }
+@keyframes buzz { 0%{transform:translate(0,0)} 25%{transform:translate(30px,-10px)} 50%{transform:translate(10px,8px)} 75%{transform:translate(-26px,-4px)} 100%{transform:translate(0,0)} }
+.tail-twitch { animation: twitch 2.6s ease-in-out infinite; transform-origin: bottom center; }
+@keyframes twitch { 0%,70%,100%{transform:rotate(0)} 80%{transform:rotate(-16deg)} 90%{transform:rotate(10deg)} }
+.hop { animation: hop 3.4s ease-in-out infinite; }
+@keyframes hop { 0%,60%,100%{transform:translateY(0)} 75%{transform:translateY(-6px)} }
+.walk { animation: walk 14s linear infinite; }
+@keyframes walk { 0%{transform:translateX(-30px)} 100%{transform:translateX(300px)} }
+.bird-bob { animation: bob 3s ease-in-out infinite; transform-origin: center; }
+@keyframes bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-3px)} }
+@media (prefers-reduced-motion: reduce) {
+  .tree-sway,.leaf-fall,.butterfly,.bfly-wing,.firefly,.bee,.tail-twitch,.hop,.walk,.bird-bob { animation: none !important; }
+  .leaf-fall { opacity: 0; }
+}
+
+/* ============================ HOME BUDGET ============================ */
+.money-row { display: flex; align-items: flex-end; justify-content: space-between; gap: 10px; }
+.money-big { font-size: 38px; font-weight: 600; line-height: 1; letter-spacing: .2px; }
+.money-sub { font-size: 13px; color: var(--ink-soft); font-weight: 700; }
+.bar { height: 12px; border-radius: 20px; background: var(--surface-2); overflow: hidden; border: 1px solid var(--line); }
+.bar > i { display: block; height: 100%; border-radius: 20px; transition: width .6s cubic-bezier(.2,.8,.2,1); }
+.chip {
+  display: inline-flex; align-items: center; gap: 6px; padding: 6px 11px; border-radius: 999px;
+  background: var(--surface-2); font-size: 12.5px; font-weight: 700; color: var(--ink);
+  border: 1px solid var(--line);
+}
+
+/* list rows */
+.row {
+  display: flex; align-items: center; gap: 12px; padding: 11px 4px;
+  border-bottom: 1px solid var(--line);
+}
+.row:last-child { border-bottom: 0; }
+.row .emoji {
+  width: 40px; height: 40px; border-radius: 13px; display: grid; place-items: center;
+  background: var(--surface-2); font-size: 19px; flex: none;
+}
+.row .grow { flex: 1; min-width: 0; }
+.row .name { font-weight: 700; font-size: 14.5px; }
+.row .meta { font-size: 12px; color: var(--ink-soft); }
+.row .amt { font-weight: 800; font-size: 15px; }
+
+/* ============================ BOTTOM NAV ============================ */
+.nav {
+  position: absolute; left: 0; right: 0; bottom: 0;
+  display: grid; grid-template-columns: repeat(5, 1fr); align-items: end;
+  padding: 8px 10px calc(10px + env(safe-area-inset-bottom));
+  background: linear-gradient(180deg, transparent, var(--frame) 34%);
+}
+.nav button {
+  border: 0; background: transparent; color: var(--ink-soft);
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  font-size: 10.5px; font-weight: 800; padding: 6px 0; transition: color .2s;
+}
+.nav button .ic { font-size: 20px; transition: transform .2s; }
+.nav button.on { color: var(--leaf-deep); }
+.nav button.on .ic { transform: translateY(-2px) scale(1.1); }
+.nav .addbtn {
+  align-self: center; margin-top: -14px;
+  width: 60px; height: 60px; border-radius: 22px; color: #fff;
+  background: linear-gradient(155deg, var(--leaf-lite), var(--leaf-deep));
+  box-shadow: 0 10px 22px -8px rgba(78,126,76,.75), inset 0 -3px 6px rgba(0,0,0,.15);
+  display: grid; place-items: center; font-size: 30px; font-weight: 700;
+  transition: transform .18s ease;
+}
+.nav .addbtn:active { transform: scale(.9); }
+.nav .addlabel { font-size: 10.5px; font-weight: 800; color: var(--leaf-deep); margin-top: 2px; }
+
+/* ============================ ADD SHEET ============================ */
+.sheet-scrim {
+  position: absolute; inset: 0; background: rgba(40,32,24,.42);
+  display: flex; align-items: flex-end; z-index: 40;
+  animation: fade .2s ease;
+}
+@keyframes fade { from { opacity: 0; } }
+.sheet {
+  width: 100%; background: var(--frame); border-radius: 28px 28px 0 0;
+  padding: 10px 16px calc(18px + env(safe-area-inset-bottom));
+  box-shadow: 0 -14px 40px -12px rgba(0,0,0,.4); animation: rise .28s cubic-bezier(.2,.9,.2,1);
+  max-height: 96%; display: flex; flex-direction: column;
+}
+@keyframes rise { from { transform: translateY(100%); } }
+.grabber { width: 42px; height: 5px; border-radius: 9px; background: var(--line); margin: 4px auto 8px; }
+.amount-display {
+  text-align: center; padding: 6px 0 2px;
+}
+.amount-display .q { font-size: 13px; font-weight: 800; color: var(--ink-soft); letter-spacing: .04em; }
+.amount-display .val {
+  font-size: 56px; font-weight: 600; line-height: 1.05; letter-spacing: .5px;
+  display: inline-flex; align-items: baseline; gap: 3px;
+}
+.amount-display .cur { font-size: 26px; color: var(--ink-soft); }
+.amount-display .val.empty { color: var(--ink-soft); opacity: .45; }
+.catgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px; margin: 12px 0 4px; }
+.cat {
+  border: 1.5px solid var(--line); background: var(--surface); border-radius: 18px;
+  padding: 11px 6px; display: flex; flex-direction: column; align-items: center; gap: 4px;
+  font-weight: 800; font-size: 12.5px; color: var(--ink); transition: transform .12s, border-color .2s, background .2s;
+}
+.cat .ce { font-size: 23px; }
+.cat:active { transform: scale(.94); }
+.cat.sel { border-color: var(--leaf); background: color-mix(in srgb, var(--leaf) 14%, var(--surface)); }
+.recent-lbl { font-size: 11px; font-weight: 800; color: var(--ink-soft); letter-spacing: .1em; text-transform: uppercase; margin: 2px 0; }
+.keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 8px; }
+.key {
+  border: 0; background: var(--surface); border-radius: 16px; padding: 15px 0;
+  font-size: 23px; font-weight: 700; color: var(--ink); box-shadow: var(--shadow-soft);
+  transition: transform .1s, background .15s;
+}
+.key:active { transform: scale(.93); background: var(--surface-2); }
+.key.wide { grid-column: span 1; }
+.save-btn {
+  margin-top: 10px; width: 100%; border: 0; border-radius: 20px; padding: 16px;
+  font-size: 17px; font-weight: 800; color: #fff;
+  background: linear-gradient(150deg, var(--leaf-lite), var(--leaf-deep));
+  box-shadow: 0 12px 24px -10px rgba(78,126,76,.7); transition: transform .14s, filter .2s;
+}
+.save-btn:disabled { filter: grayscale(.5) opacity(.55); box-shadow: none; }
+.save-btn:not(:disabled):active { transform: scale(.97); }
+.note-input {
+  width: 100%; border: 1.5px solid var(--line); background: var(--surface); border-radius: 14px;
+  padding: 10px 12px; font-size: 14px; color: var(--ink); font-family: inherit; margin-top: 8px;
+}
+.linkish { background: none; border: 0; color: var(--leaf-deep); font-weight: 800; font-size: 13px; padding: 6px; }
+
+/* ============================ REWARD OVERLAY ============================ */
+.reward {
+  position: absolute; inset: 0; z-index: 60; display: grid; place-items: center;
+  background: rgba(30,40,30,.28); backdrop-filter: blur(2px);
+  animation: fade .25s ease;
+}
+.reward .card-r {
+  text-align: center; animation: pop .5s cubic-bezier(.2,1.4,.4,1);
+}
+@keyframes pop { from { transform: scale(.6); opacity: 0; } }
+.reward .big { font-size: 30px; font-weight: 600; margin: 8px 0 2px; }
+.reward .sub { font-size: 15px; font-weight: 700; color: #fff; text-shadow: 0 1px 4px rgba(0,0,0,.4); }
+.spark { position: absolute; font-size: 22px; animation: sparkle 1.4s ease-out forwards; }
+@keyframes sparkle {
+  0% { transform: translate(0,0) scale(0); opacity: 0; }
+  30% { opacity: 1; transform: translate(var(--dx), var(--dy)) scale(1.1); }
+  100% { transform: translate(calc(var(--dx)*1.5), calc(var(--dy)*1.5 - 20px)) scale(.3); opacity: 0; }
+}
+.reward-emoji { font-size: 72px; filter: drop-shadow(0 6px 10px rgba(0,0,0,.25)); animation: bounceIn .6s cubic-bezier(.2,1.5,.4,1); }
+@keyframes bounceIn { 0% { transform: scale(0) rotate(-20deg); } 60% { transform: scale(1.2) rotate(6deg); } 100% { transform: scale(1); } }
+
+/* toast */
+.toast-wrap { position: absolute; top: 14px; left: 0; right: 0; display: flex; flex-direction: column; align-items: center; gap: 8px; z-index: 70; pointer-events: none; }
+.toast {
+  background: var(--ink); color: #fff8ea; border-radius: 18px; padding: 11px 15px;
+  display: flex; align-items: center; gap: 10px; box-shadow: var(--shadow);
+  animation: toastIn .4s cubic-bezier(.2,1.2,.3,1); max-width: 90%;
+}
+@keyframes toastIn { from { transform: translateY(-24px); opacity: 0; } }
+.toast .te { font-size: 24px; }
+.toast .tt { font-size: 13px; font-weight: 800; }
+.toast .ts { font-size: 11.5px; opacity: .8; }
+
+/* ============================ REPORTS / GENERIC ============================ */
+.seg { display: flex; gap: 6px; background: var(--surface-2); padding: 4px; border-radius: 16px; }
+.seg button {
+  flex: 1; border: 0; background: transparent; padding: 9px; border-radius: 12px;
+  font-weight: 800; font-size: 13px; color: var(--ink-soft); transition: all .2s;
+}
+.seg button.on { background: var(--surface); color: var(--ink); box-shadow: var(--shadow-soft); }
+.statgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.stat { background: var(--surface-2); border-radius: 16px; padding: 12px; }
+.stat .k { font-size: 11px; font-weight: 800; color: var(--ink-soft); letter-spacing: .04em; text-transform: uppercase; }
+.stat .v { font-size: 22px; font-weight: 800; margin-top: 3px; letter-spacing: -.01em; }
+.catbar-row { display: flex; align-items: center; gap: 10px; margin: 9px 0; }
+.catbar-row .lab { width: 92px; font-size: 13px; font-weight: 700; display: flex; gap: 6px; align-items: center; }
+.catbar-row .track { flex: 1; height: 14px; border-radius: 10px; background: var(--surface-2); overflow: hidden; }
+.catbar-row .track > i { display: block; height: 100%; border-radius: 10px; }
+.catbar-row .amt { width: 62px; text-align: right; font-weight: 800; font-size: 13px; }
+.delta-up { color: var(--alert); } .delta-down { color: var(--good); }
+.insight {
+  background: linear-gradient(150deg, color-mix(in srgb, var(--sun) 22%, var(--surface)), var(--surface));
+  border: 1px solid var(--line); border-radius: 18px; padding: 14px; display: flex; gap: 11px; align-items: flex-start;
+}
+.insight .ie { font-size: 24px; }
+.win { display: flex; align-items: center; gap: 9px; padding: 8px 2px; font-weight: 700; font-size: 14px; }
+.win .ck { color: var(--good); font-weight: 900; }
+
+/* ============================ TREE PAGE STATS ============================ */
+.tstat-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 10px; }
+.tstat { text-align: center; background: var(--surface-2); border-radius: 16px; padding: 12px 6px; }
+.tstat .n { font-size: 22px; font-weight: 800; }
+.tstat .l { font-size: 11px; font-weight: 700; color: var(--ink-soft); }
+.friend-strip { display: flex; flex-wrap: wrap; gap: 8px; }
+.friend {
+  display: flex; align-items: center; gap: 7px; background: var(--surface-2);
+  padding: 7px 11px; border-radius: 999px; font-size: 12.5px; font-weight: 800; border: 1px solid var(--line);
+}
+.friend.locked { opacity: .4; filter: grayscale(1); }
+.ach-item { display: flex; gap: 12px; align-items: center; padding: 11px 4px; border-bottom: 1px solid var(--line); }
+.ach-item:last-child { border-bottom: 0; }
+.ach-item.locked { opacity: .46; }
+.ach-badge {
+  width: 46px; height: 46px; border-radius: 15px; display: grid; place-items: center; font-size: 24px; flex: none;
+  background: radial-gradient(circle at 40% 35%, var(--sun-soft), var(--surface-2));
+  border: 1px solid var(--line);
+}
+.ach-item.locked .ach-badge { background: var(--surface-2); }
+.ach-txt .t { font-weight: 800; font-size: 14px; }
+.ach-txt .d { font-size: 12px; color: var(--ink-soft); }
+.ach-txt .r { font-size: 11px; font-weight: 800; color: var(--leaf-deep); margin-top: 2px; }
+
+/* forest grid */
+.forest-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.forest-tile { background: var(--surface); border: 1px solid var(--line); border-radius: 20px; padding: 10px; box-shadow: var(--shadow-soft); }
+.forest-tile .mini {
+  aspect-ratio: 1/1; border-radius: 14px; overflow: hidden; position: relative;
+  background: linear-gradient(180deg, var(--sky-top), var(--sky-bot));
+}
+.forest-tile .mini svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.forest-tile .fm { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; }
+.forest-tile .fm .mo { font-weight: 800; font-size: 14px; }
+.forest-tile .fm .st { font-size: 11px; font-weight: 800; padding: 3px 8px; border-radius: 999px; }
+.forest-tile .friends-mini { display: flex; gap: 2px; margin-top: 5px; font-size: 13px; min-height: 18px; }
+
+/* empty */
+.empty { text-align: center; padding: 30px 20px; color: var(--ink-soft); }
+.empty .e { font-size: 44px; }
+.section-title { font-size: 16px; font-weight: 800; margin: 4px 0; letter-spacing: -.01em; }
+
+/* settings */
+.field { margin: 14px 0; }
+.field label { font-size: 12.5px; font-weight: 800; color: var(--ink-soft); display: block; margin-bottom: 6px; }
+.field input, .field select {
+  width: 100%; border: 1.5px solid var(--line); background: var(--surface); border-radius: 14px;
+  padding: 12px; font-size: 15px; color: var(--ink); font-family: inherit;
+}
+.reminder-row { display: flex; align-items: center; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.toggle {
+  width: 46px; height: 27px; border-radius: 999px; border: 0; background: var(--line); position: relative; transition: background .2s; flex: none;
+}
+.toggle.on { background: var(--leaf); }
+.toggle::after { content: ""; position: absolute; top: 3px; left: 3px; width: 21px; height: 21px; border-radius: 50%; background: #fff; transition: transform .2s; box-shadow: 0 1px 3px rgba(0,0,0,.3); }
+.toggle.on::after { transform: translateX(19px); }
+.ghost-btn { width: 100%; border: 1.5px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 14px; padding: 13px; font-weight: 800; font-size: 14px; }
+.danger { color: var(--alert); border-color: color-mix(in srgb, var(--alert) 40%, var(--line)); }
+
+.fade-in { animation: fadeUp .35s ease both; }
+@keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } }
+.hint { font-size: 12px; color: var(--ink-soft); line-height: 1.5; }
+.spacer-8 { height: 8px; } .spacer-14 { height: 14px; } .spacer-20 { height: 20px; }
+</style>
+
+<div id="app-root"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.3.1/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.3.1/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.24.7/babel.min.js"></script>
+
+<script type="text/babel" data-presets="react">
+const { useState, useEffect, useMemo, useRef, useReducer } = React;
+
+/* =====================================================================
+   MODULE: model  — data model + constants (ports cleanly to a TS repo)
+   ===================================================================== */
+const CATEGORIES = [
+  { key: "food",      label: "Food",      emoji: "🍜", color: "#e8975a" },
+  { key: "transport", label: "Transport", emoji: "🚗", color: "#6ea9c9" },
+  { key: "shopping",  label: "Shopping",  emoji: "🛍️", color: "#e68aa0" },
+  { key: "bills",     label: "Bills",     emoji: "🏠", color: "#9a86c4" },
+  { key: "fun",       label: "Fun",       emoji: "🎉", color: "#e0b04e" },
+  { key: "other",     label: "Other",     emoji: "💛", color: "#8bb978" },
+];
+const CAT = Object.fromEntries(CATEGORIES.map(c => [c.key, c]));
+
+// Money coming in. "Saved" is derived: income − spent within a cycle.
+const INCOME_CATS = [
+  { key: "salary", label: "Income", emoji: "💼", color: "#4caf72" },
+  { key: "gift",   label: "Gift",   emoji: "🎁", color: "#ff9ec4" },
+  { key: "other_in", label: "Other", emoji: "💰", color: "#8bb978" },
+];
+const ICAT = Object.fromEntries(INCOME_CATS.map(c => [c.key, c]));
+const catInfo = (key) => CAT[key] || ICAT[key] || { label: key, emoji: "💛", color: "#8bb978" };
+const typeOf = (e) => e.type || "expense";
+
+const TREE_TYPES = ["oak", "cherry", "apple", "maple", "pine", "willow", "magical"];
+const STAGE_NAMES = ["Seed", "Sprout", "Sapling", "Young tree", "Growing tree", "Flowering tree", "Magical tree"];
+
+/* =====================================================================
+   MODULE: dates
+   ===================================================================== */
+const dayKey = (d) => { const x = new Date(d); return `${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,"0")}-${String(x.getDate()).padStart(2,"0")}`; };
+const monthKey = (d) => { const x = new Date(d); return `${x.getFullYear()}-${String(x.getMonth()+1).padStart(2,"0")}`; };
+const MONTH_NAMES = ["January","February","March","April","May","June","July","August","September","October","November","December"];
+const monthLabel = (mk) => { const [y,m] = mk.split("-"); return MONTH_NAMES[+m-1] + " " + y; };
+const monthShort = (mk) => { const [,m] = mk.split("-"); return MONTH_NAMES[+m-1]; };
+const daysBetween = (a, b) => Math.round((new Date(dayKey(b)) - new Date(dayKey(a))) / 86400000);
+const now = () => Date.now();
+
+/* Budget cycle: starts on CYCLE_START_DAY of the previous month, ends the day
+   before it in the current month, named after the current month. Configurable
+   in Settings (App sets this from prefs before any stats are computed). */
+let CYCLE_START_DAY = 25;
+function setCycleStartDay(n) { CYCLE_START_DAY = Math.min(28, Math.max(1, n || 25)); }
+const ordinal = (n) => { const s=["th","st","nd","rd"], v=n%100; return n+(s[(v-20)%10]||s[v]||s[0]); };
+const ymKey = (y, m) => { while (m > 11) { m -= 12; y += 1; } while (m < 0) { m += 12; y -= 1; } return `${y}-${String(m+1).padStart(2,"0")}`; };
+// A cycle is named after the month its LAST day falls in, so start day 1 == the
+// calendar month, and start day 25 == the 25th of the prev month → 24th of this one.
+function cycleKey(d) {
+  const x = new Date(d); const D = CYCLE_START_DAY;
+  const startMonth = x.getDate() >= D ? x.getMonth() : x.getMonth() - 1;   // month the current cycle began in
+  const nameMonth = D >= 2 ? startMonth + 1 : startMonth;                   // month it ends in
+  return ymKey(x.getFullYear(), nameMonth);
+}
+function cycleStartDate(ck) {
+  const [y, m] = ck.split("-").map(Number); const D = CYCLE_START_DAY;
+  const startMonth = (D >= 2 ? (m - 1) - 1 : (m - 1));                      // 0-based
+  const key = ymKey(y, startMonth);
+  const [sy, sm] = key.split("-").map(Number);
+  return new Date(sy, sm - 1, D);
+}
+function prevCycleKey(ck) {
+  const [y, m] = ck.split("-").map(Number);
+  return ymKey(y, (m - 1) - 1);                                            // previous month's name
+}
+
+/* =====================================================================
+   MODULE: gamification — growth, health, streak, achievements
+   ===================================================================== */
+function growthStageFromProgress(p) {
+  if (p <= 0) return 0;
+  if (p < 12) return 1;
+  if (p < 28) return 2;
+  if (p < 48) return 3;
+  if (p < 70) return 4;
+  if (p < 92) return 5;
+  return 6;
+}
+function computeStreak(dayKeys) {
+  if (!dayKeys.length) return 0;
+  const set = new Set(dayKeys);
+  const today = dayKey(now());
+  let cursor = set.has(today) ? new Date(today) : new Date(dayKey(now() - 86400000));
+  if (!set.has(dayKey(cursor))) return 0;
+  let streak = 0;
+  while (set.has(dayKey(cursor))) { streak++; cursor = new Date(cursor.getTime() - 86400000); }
+  return streak;
+}
+function longestStreak(dayKeys) {
+  const sorted = [...new Set(dayKeys)].sort();
+  let best = 0, run = 0, prev = null;
+  for (const k of sorted) {
+    if (prev && daysBetween(prev, k) === 1) run++; else run = 1;
+    best = Math.max(best, run); prev = k;
+  }
+  return best;
+}
+
+// Achievements — each unlocks a living reward in the forest.
+const ACHIEVEMENTS = [
+  { id:"first-log",     icon:"🌱", title:"First Sprout",       desc:"Logged your very first expense.",        reward:{kind:"nature", key:"buds",     label:"New buds"},        test:s=>s.count>=1 },
+  { id:"first-income",  icon:"💼", title:"First Harvest",      desc:"Logged money coming in.",                reward:{kind:"nature", key:"acorns",   label:"Acorn stash"},     test:s=>s.incomeCount>=1 },
+  { id:"logs-5",        icon:"🍄", title:"Mushroom Patch",     desc:"Logged 5 expenses.",                     reward:{kind:"nature", key:"mushrooms",label:"Mushrooms"},       test:s=>s.count>=5 },
+  { id:"streak-3",      icon:"🌸", title:"Getting Cozy",       desc:"3-day tracking streak.",                 reward:{kind:"nature", key:"flowers",  label:"Wildflowers"},     test:s=>s.streak>=3 },
+  { id:"streak-7",      icon:"🐝", title:"Growing Habit",      desc:"Tracked 7 days in a row.",               reward:{kind:"animal", key:"bee",      label:"Little bee"},      test:s=>s.streak>=7 },
+  { id:"logs-25",       icon:"🐦", title:"Woodland Bird",      desc:"Logged 25 expenses.",                    reward:{kind:"animal", key:"bird",     label:"Woodland bird"},   test:s=>s.count>=25 },
+  { id:"streak-14",     icon:"🦋", title:"Butterfly Friend",   desc:"Tracked 14 days in a row.",              reward:{kind:"animal", key:"butterfly",label:"Butterfly"},       test:s=>s.streak>=14 },
+  { id:"tracked-30",    icon:"🌳", title:"Strong Roots",       desc:"Tracked on 30 different days.",           reward:{kind:"nature", key:"tallgrass",label:"Tall grass"},      test:s=>s.trackedDays>=30 },
+  { id:"streak-30",     icon:"🐿️", title:"Little Squirrel",    desc:"Tracked 30 days in a row.",              reward:{kind:"animal", key:"squirrel", label:"Squirrel"},        test:s=>s.streak>=30 },
+  { id:"logs-50",       icon:"🦔", title:"Hedgehog Friend",    desc:"Logged 50 expenses.",                    reward:{kind:"animal", key:"hedgehog", label:"Hedgehog"},        test:s=>s.count>=50 },
+  { id:"streak-60",     icon:"🐰", title:"Meadow Rabbit",      desc:"Tracked 60 days in a row.",              reward:{kind:"animal", key:"rabbit",   label:"Rabbit"},          test:s=>s.streak>=60 },
+  { id:"streak-90",     icon:"✨", title:"Fireflies",          desc:"Tracked 90 days in a row.",              reward:{kind:"nature", key:"fireflies",label:"Fireflies"},       test:s=>s.streak>=90 },
+  { id:"logs-100",      icon:"🦊", title:"Forest Fox",         desc:"Logged 100 expenses.",                   reward:{kind:"animal", key:"fox",      label:"Fox"},             test:s=>s.count>=100 },
+  { id:"under-budget",  icon:"🏡", title:"Steady Month",       desc:"Stayed under budget with a full month.", reward:{kind:"nature", key:"flowers2",  label:"Extra blooms"},    test:s=>s.underBudget },
+  { id:"food-saver",    icon:"🥗", title:"Foodie Saver",       desc:"Spent 10% less on food than last month.", reward:{kind:"nature", key:"clover",   label:"Lucky clover"},    test:s=>s.foodSaver },
+  { id:"saver-month",   icon:"💰", title:"Little Saver",       desc:"Spent less than the previous month.",    reward:{kind:"nature", key:"pond",     label:"Woodland pond"},   test:s=>s.saverMonth },
+];
+const ACH_BY_ID = Object.fromEntries(ACHIEVEMENTS.map(a=>[a.id,a]));
+
+/* =====================================================================
+   MODULE: selectors — derive everything from expenses + prefs
+   ===================================================================== */
+function buildStats(state) {
+  const { expenses: entries, prefs } = state;
+  const tk = dayKey(now());
+  const ck = cycleKey(now());
+  const prevCk = prevCycleKey(ck);
+
+  const dayKeys = entries.map(e => dayKey(e.ts));           // any entry waters the tree
+  const trackedDays = new Set(dayKeys).size;
+  const streak = computeStreak(dayKeys);
+  const longest = longestStreak(dayKeys);
+
+  const exp = entries.filter(e => typeOf(e) === "expense");
+  const inc = entries.filter(e => typeOf(e) === "income");
+  const cyc = (arr, key) => arr.filter(e => cycleKey(e.ts) === key);
+  const sum = (arr) => arr.reduce((a,e)=>a+e.amount, 0);
+  const byCat = (arr) => { const o = {}; for (const e of arr) o[e.category] = (o[e.category]||0)+e.amount; return o; };
+
+  const monthExp = cyc(exp, ck);
+  const prevExp = cyc(exp, prevCk);
+  const monthInc = cyc(inc, ck);
+
+  const monthSpent = sum(monthExp);
+  const prevSpent = sum(prevExp);
+  const monthIncome = sum(monthInc);
+  const netSaved = Math.max(0, monthIncome - monthSpent);   // "Saved" = money in − money out
+
+  const monthBudget = (prefs.budgets && prefs.budgets[ck]) || prefs.defaultBudget || 1500;
+  const monthCat = byCat(monthExp);
+  const prevCat = byCat(prevExp);
+  const trackedThisMonth = new Set(cyc(entries, ck).map(e=>dayKey(e.ts))).size;
+
+  const daysIntoCycle = daysBetween(cycleStartDate(ck), now()) + 1;
+  const underBudget = monthSpent < monthBudget && trackedThisMonth >= 6 && daysIntoCycle >= 14;
+  const foodSaver = (prevCat.food||0) > 0 && (monthCat.food||0) < (prevCat.food||0)*0.9;
+  const saverMonth = prevSpent > 0 && monthSpent < prevSpent && trackedThisMonth >= 4;
+
+  const count = entries.length;
+  const incomeCount = inc.length;
+  const growthProgress = Math.min(100, trackedThisMonth*7 + Math.min(cyc(entries,ck).length,14)*1.2);
+  const stage = growthStageFromProgress(growthProgress);
+
+  const lastTs = entries.length ? Math.max(...entries.map(e=>e.ts)) : null;
+  const missedDays = lastTs ? Math.max(0, daysBetween(lastTs, now())) : 0;
+  const loggedToday = dayKeys.includes(tk);
+  const health = lastTs ? Math.max(25, 100 - missedDays*22) : 70;
+
+  const xp = count * 12;
+  const level = 1 + Math.floor(xp / 120);
+
+  const achStats = { count, incomeCount, streak, longest, trackedDays, underBudget, foodSaver, saverMonth };
+  const unlocked = ACHIEVEMENTS.filter(a => a.test(achStats)).map(a => a.id);
+  const rewardKeys = unlocked.map(id => ACH_BY_ID[id] && ACH_BY_ID[id].reward.key).filter(Boolean);
+  // the stash grows with how much you've saved (one acorn per ~1/14 of budget, capped)
+  const acornStep = Math.max(20, monthBudget / 14);
+  const acornCount = Math.min(14, Math.max(1, Math.round(netSaved / acornStep)));
+
+  const todays = cyc(entries, ck).filter(e => dayKey(e.ts) === tk).sort((a,b)=>b.ts-a.ts);
+
+  return {
+    tk, mk: ck, prevMk: prevCk, monthBudget, monthSpent, prevSpent, monthIncome, netSaved,
+    monthCat, prevCat, trackedDays, trackedThisMonth, streak, longest, count, incomeCount,
+    growthProgress, stage, health, loggedToday, missedDays, xp, level, unlocked, rewardKeys, acornCount, todays, monthExp,
+    daysIntoCycle, treeType: treeTypeForMonth(ck),
+  };
+}
+function treeTypeForMonth(mk) {
+  const [y,m] = mk.split("-").map(Number);
+  return TREE_TYPES[(y*12 + m) % TREE_TYPES.length];
+}
+
+/* =====================================================================
+   MODULE: storage
+   ===================================================================== */
+const STORAGE_KEY = "little-forest-v1";
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch (e) {}
+  return seedState();
+}
+function saveState(s) { try { localStorage.setItem(STORAGE_KEY, JSON.stringify(s)); } catch(e){} }
+
+// First-run demo so the whole app feels alive. Clearable in Settings.
+function seedState() {
+  const expenses = [];
+  const noon = new Date(); noon.setHours(12,0,0,0);   // anchor to midday so days are stable
+  const t = noon.getTime();
+  const demo = [
+    [0,"food",6.5],[0,"transport",4],[0,"shopping",12],
+    [1,"food",9.2],[1,"fun",15],
+    [2,"food",7.8],[2,"bills",70],
+    [3,"food",5.5],[3,"transport",4],
+    [4,"food",11],[4,"shopping",24.5],
+    [5,"food",6],[5,"fun",8],
+    [6,"food",8.4],[6,"transport",4],
+    [8,"food",7.2],[8,"other",5],
+    [9,"food",6.5],[9,"shopping",18],
+  ];
+  let id = 1;
+  for (const [ago, cat, amt] of demo) {
+    const ts = t - ago*86400000;
+    expenses.push({ id: "d"+(id++), amount: amt, category: cat, note: "", ts, type: "expense" });
+  }
+  // money coming in this cycle → "Saved" shows a happy number
+  expenses.push({ id:"i1", amount: 1200, category:"salary", note:"Payday", ts: t - 9*86400000, type:"income" });
+  expenses.push({ id:"i2", amount: 40,   category:"gift",   note:"Grandma", ts: t - 3*86400000, type:"income" });
+  return {
+    version: 1,
+    prefs: {
+      currency: "$",
+      defaultBudget: 900,
+      budgets: {},
+      cycleStartDay: 25,
+      reminders: [
+        { id:"r1", time:"12:30", category:"food", enabled:true },
+        { id:"r2", time:"20:30", category:null, enabled:true },
+      ],
+      seeded: true,
+    },
+    expenses,
+    meta: { seenAch: [], startDate: dayKey(t - 12*86400000) },
+  };
+}
+function emptyState() {
+  return {
+    version: 1,
+    prefs: { currency:"$", defaultBudget:900, budgets:{}, cycleStartDay:25, reminders:[{id:"r1",time:"20:30",category:null,enabled:true}], seeded:false },
+    expenses: [],
+    meta: { seenAch: [], startDate: dayKey(now()) },
+  };
+}
+
+/* =====================================================================
+   MODULE: reducer
+   ===================================================================== */
+function reducer(state, action) {
+  switch (action.type) {
+    case "ADD": {
+      const e = { id: "e"+now()+Math.random().toString(36).slice(2,6), amount: action.amount, category: action.category, note: action.note||"", ts: now(), type: action.kind||"expense" };
+      return { ...state, expenses: [...state.expenses, e] };
+    }
+    case "SEEN_ACH":
+      return { ...state, meta: { ...state.meta, seenAch: Array.from(new Set([...state.meta.seenAch, ...action.ids])) } };
+    case "SET_BUDGET": {
+      const mk = cycleKey(now());
+      return { ...state, prefs: { ...state.prefs, defaultBudget: action.amount, budgets: { ...state.prefs.budgets, [mk]: action.amount } } };
+    }
+    case "SET_CURRENCY":
+      return { ...state, prefs: { ...state.prefs, currency: action.currency } };
+    case "SET_CYCLE_START":
+      return { ...state, prefs: { ...state.prefs, cycleStartDay: action.day } };
+    case "SET_REMINDERS":
+      return { ...state, prefs: { ...state.prefs, reminders: action.reminders } };
+    case "CLEAR":
+      return emptyState();
+    case "RESEED":
+      return seedState();
+    default:
+      return state;
+  }
+}
+
+/* =====================================================================
+   MODULE: TreeScene — parametric cozy SVG tree + forest life
+   ===================================================================== */
+const TYPE_STYLE = {
+  oak:     { leaf:"#6fa76a", leaf2:"#4e7e4c", bark:"#8a6141", bloom:null },
+  cherry:  { leaf:"#7fb87a", leaf2:"#5a9455", bark:"#8a6141", bloom:"#f2b8cb" },
+  apple:   { leaf:"#5fa15b", leaf2:"#437c40", bark:"#8a6141", bloom:null, fruit:"#e0655a" },
+  maple:   { leaf:"#e2954e", leaf2:"#cf7a3c", bark:"#8a6141", bloom:null },
+  pine:    { leaf:"#5c9668", leaf2:"#3f7550", bark:"#7c5535", bloom:null, conifer:true },
+  willow:  { leaf:"#89b96f", leaf2:"#6a9c55", bark:"#9c7a55", bloom:null, weep:true },
+  magical: { leaf:"#8fb4d6", leaf2:"#6f93c4", bark:"#7a6ba0", bloom:"#cbb0ec", glow:true },
+};
+
+function Blob({ cx, cy, r, fill }) {
+  return <circle cx={cx} cy={cy} r={r} fill={fill} />;
+}
+
+function TreeScene({ stats, treeType, unlocked, night, mini, acornCount = 3 }) {
+  const st = TYPE_STYLE[treeType] || TYPE_STYLE.oak;
+  const stage = stats.stage;
+  const health = stats.health;
+  const has = (k) => unlocked.includes(k);
+  // health visuals
+  const droop = health < 60 ? (60 - health) / 30 : 0;      // 0..~1.3
+  const wilt = health < 70;
+  const faded = health < 55;
+
+  // ground
+  const groundY = 250;
+  const els = [];
+
+  // ---- TRUNK + CANOPY by stage ----
+  const canopy = [];
+  const trunk = [];
+  if (stage === 0) {
+    // seed / acorn in soil
+    trunk.push(<ellipse key="mound" cx="150" cy="248" rx="26" ry="10" fill="rgba(0,0,0,.08)"/>);
+    canopy.push(<g key="acorn"><ellipse cx="150" cy="238" rx="13" ry="15" fill="#b98a5a"/><path d="M137 232 q13 -12 26 0 z" fill="#8a6141"/><rect x="148" y="216" width="4" height="7" rx="2" fill="#8a6141"/></g>);
+  } else if (stage === 1) {
+    // sprout: stem + two leaves
+    trunk.push(<path key="stem" d="M150 250 Q149 224 150 206" stroke={st.bark} strokeWidth="5" fill="none" strokeLinecap="round"/>);
+    canopy.push(<g key="lv">
+      <path d="M150 214 Q128 206 122 218 Q138 226 150 214Z" fill={st.leaf}/>
+      <path d="M150 208 Q172 198 180 210 Q162 220 150 208Z" fill={st.leaf2}/>
+      <circle cx="150" cy="204" r="6" fill={st.leaf}/>
+    </g>);
+  } else {
+    // trunk grows with stage
+    const trunkTopY = [null,null,196,176,150,132,120][stage];
+    const trunkW = [null,null,10,13,16,18,19][stage];
+    trunk.push(
+      <path key="trunk" d={`M${150-trunkW/2} 251 Q${150-trunkW/2+2} ${trunkTopY+30} ${150-2} ${trunkTopY}
+                            L${150+2} ${trunkTopY} Q${150+trunkW/2-2} ${trunkTopY+30} ${150+trunkW/2} 251 Z`}
+            fill={st.bark}/>
+    );
+    // a couple of branches from stage 3+
+    if (stage >= 3) {
+      trunk.push(<path key="br1" d={`M150 ${trunkTopY+34} Q126 ${trunkTopY+30} 118 ${trunkTopY+12}`} stroke={st.bark} strokeWidth={stage>=4?6:4} fill="none" strokeLinecap="round"/>);
+      trunk.push(<path key="br2" d={`M150 ${trunkTopY+46} Q176 ${trunkTopY+40} 186 ${trunkTopY+22}`} stroke={st.bark} strokeWidth={stage>=4?6:4} fill="none" strokeLinecap="round"/>);
+    }
+    // canopy blobs — size & count scale with stage
+    const cCy = trunkTopY - 6;
+    const scale = [null,null,.55,.72,.92,1.02,1.12][stage];
+    if (st.conifer) {
+      // pine: stacked triangles
+      const tiers = stage>=4?4:3;
+      for (let i=0;i<tiers;i++){
+        const w = (58 - i*12) * scale;
+        const y = cCy + 26 - i*30*scale;
+        canopy.push(<path key={"pt"+i} d={`M${150-w} ${y} L150 ${y-40*scale} L${150+w} ${y} Z`} fill={i%2?st.leaf2:st.leaf}/>);
+      }
+    } else {
+      const R = 46*scale;
+      const blobs = [
+        [150, cCy, R], [150-R*0.7, cCy+6, R*0.72], [150+R*0.7, cCy+6, R*0.72],
+        [150-R*0.4, cCy-R*0.6, R*0.66], [150+R*0.42, cCy-R*0.55, R*0.62],
+        [150, cCy-R*0.85, R*0.6],
+      ];
+      const shown = stage<=2?3:(stage===3?4:6);
+      // back layer (darker)
+      for (let i=0;i<shown;i++){ const [x,y,r]=blobs[i]; canopy.push(<Blob key={"cb"+i} cx={x} cy={y+3} r={r} fill={st.leaf2}/>); }
+      for (let i=0;i<shown;i++){ const [x,y,r]=blobs[i]; canopy.push(<Blob key={"cf"+i} cx={x} cy={y-2} r={r*0.9} fill={st.leaf}/>); }
+      if (st.weep) {
+        for (let i=-2;i<=2;i++){ canopy.push(<path key={"w"+i} d={`M${150+i*20} ${cCy+R*0.5} q4 30 -2 ${44*scale}`} stroke={st.leaf} strokeWidth="4" fill="none" strokeLinecap="round" opacity=".85"/>); }
+      }
+      // blossoms / fruit / flowers on the tree at mature stages
+      if (stage>=5 && st.bloom) {
+        const spots = [[128,cCy-8],[168,cCy-14],[150,cCy-30],[138,cCy+14],[172,cCy+6],[118,cCy+8]];
+        spots.forEach(([x,y],i)=>canopy.push(<circle key={"bl"+i} cx={x} cy={y} r={5} fill={st.bloom}/>));
+      }
+      if (stage>=5 && st.fruit) {
+        const spots = [[132,cCy+6],[170,cCy-4],[150,cCy+18],[120,cCy-6]];
+        spots.forEach(([x,y],i)=>canopy.push(<circle key={"fr"+i} cx={x} cy={y} r={5} fill={st.fruit}/>));
+      }
+      if (stage>=6 && st.glow) {
+        canopy.push(<circle key="halo" cx="150" cy={cCy-4} r={R*1.5} fill="url(#magic)" opacity=".5"/>);
+      }
+    }
+  }
+
+  // ---- HEALTH: falling leaves when wilting ----
+  const fallers = [];
+  if (wilt && stage >= 2 && !mini) {
+    [[130,150,.2],[168,138,1.4],[150,120,2.6]].forEach(([x,y,delay],i)=>{
+      fallers.push(<g key={"fl"+i} className="leaf-fall" style={{animationDelay:delay+"s"}}>
+        <path d={`M${x} ${y} q6 -6 12 0 q-6 8 -12 0Z`} fill={st.leaf}/>
+      </g>);
+    });
+  }
+
+  // ---- GROUND DECORATIONS (from achievements) ----
+  const deco = [];
+  if (has("flowers") || has("flowers2")) {
+    const fls = [[92,258,"#e68aa0"],[112,262,"#f0c04e"],[196,258,"#e68aa0"],[214,262,"#b98ed6"]];
+    (has("flowers2")?fls:fls.slice(0,2)).forEach(([x,y,c],i)=>deco.push(<g key={"fw"+i}>
+      <rect x={x-1} y={y-10} width="2" height="10" fill="#6a9c55"/>
+      {[0,72,144,216,288].map(a=>{const rad=a*Math.PI/180;return <circle key={a} cx={x+Math.cos(rad)*4} cy={y-12+Math.sin(rad)*4} r="3" fill={c}/>;})}
+      <circle cx={x} cy={y-12} r="2.4" fill="#fff3c4"/>
+    </g>));
+  }
+  if (has("acorns")) {
+    const acorn = (x,y,s,k)=>(<g key={"ac"+k} transform={`translate(${x},${y}) scale(${s})`}>
+      <ellipse cx="0" cy="1" rx="4" ry="5" fill="#c98a4e"/>
+      <path d="M-4.5 -2 Q0 -8 4.5 -2 Z" fill="#7c5535"/>
+      <rect x="-0.7" y="-8" width="1.4" height="3" rx="0.7" fill="#7c5535"/>
+    </g>);
+    // stack into a tidy heap that grows with savings
+    const n = Math.max(1, Math.min(mini ? 6 : 14, acornCount));
+    const cxBase = 200, cyBase = 266, rows = [5,4,3,2];
+    const heap = []; let placed = 0, y = cyBase, k = 0;
+    for (const cap of rows) {
+      const cnt = Math.min(cap, n - placed);
+      if (cnt <= 0) break;
+      const w = (cnt - 1) * 7.5;
+      for (let i = 0; i < cnt; i++) heap.push(acorn(cxBase - w/2 + i*7.5, y, 0.82, k++));
+      placed += cnt; y -= 6.5;
+    }
+    deco.push(<g key="acorns">{heap}</g>);
+  }
+  if (has("clover")) {
+    deco.push(<g key="clover" transform="translate(78,260)"><circle cx="-4" cy="-4" r="4" fill="#5a9455"/><circle cx="4" cy="-4" r="4" fill="#5a9455"/><circle cx="0" cy="2" r="4" fill="#5a9455"/><rect x="-1" y="0" width="2" height="8" fill="#5a9455"/></g>);
+  }
+  if (has("mushrooms")) {
+    [[204,262,.9],[218,266,.7]].forEach(([x,y,s],i)=>deco.push(<g key={"mu"+i} transform={`translate(${x},${y}) scale(${s})`}>
+      <rect x="-3" y="-2" width="6" height="9" rx="3" fill="#f6ecd0"/>
+      <path d="M-9 -2 Q0 -16 9 -2 Z" fill="#d9705f"/>
+      <circle cx="-3" cy="-6" r="1.6" fill="#fff"/><circle cx="3" cy="-5" r="1.3" fill="#fff"/>
+    </g>));
+  }
+  if (has("tallgrass")) {
+    [70,84,224,238].forEach((x,i)=>deco.push(<path key={"tg"+i} d={`M${x} 262 q3 -14 0 -20 M${x+4} 262 q4 -10 2 -16`} stroke="#6a9c55" strokeWidth="2.2" fill="none" strokeLinecap="round"/>));
+  }
+  if (has("pond") && !mini) {
+    deco.push(<g key="pond"><ellipse cx="212" cy="264" rx="30" ry="9" fill={night?"#3a5a72":"#8fc7d6"} opacity=".85"/><ellipse cx="205" cy="262" rx="8" ry="2.5" fill="#fff" opacity=".5"/></g>);
+  }
+
+  // ---- ANIMALS (subtle life) ----
+  const animals = [];
+  if (has("squirrel")) {
+    animals.push(<g key="sq" transform="translate(118,236)">
+      <ellipse cx="0" cy="6" rx="7" ry="9" fill="#c67a44"/>
+      <circle cx="0" cy="-3" r="5" fill="#c67a44"/>
+      <circle cx="-1.5" cy="-4" r="1.2" fill="#3a2a1a"/>
+      <path d="M-2 -7 q-2 -3 0 -5" stroke="#c67a44" strokeWidth="2.5" strokeLinecap="round"/>
+      <g className="tail-twitch"><path d="M6 10 q16 -2 10 -22 q-2 -8 -8 -6 q8 4 4 16 q-3 8 -6 12Z" fill="#a9642f"/></g>
+    </g>);
+  }
+  if (has("hedgehog") && !mini) {
+    animals.push(<g key="hh" className="walk"><g transform="translate(60,254)">
+      <ellipse cx="0" cy="0" rx="13" ry="9" fill="#8a6b4e"/>
+      {[-8,-4,0,4,8].map(x=><path key={x} d={`M${x} -6 l0 -6`} stroke="#5f4632" strokeWidth="2" strokeLinecap="round"/>)}
+      <circle cx="12" cy="1" r="4.5" fill="#c8a882"/><circle cx="15" cy="0" r="1.3" fill="#2a1e14"/>
+    </g></g>);
+  }
+  if (has("rabbit")) {
+    animals.push(<g key="rb" className="hop"><g transform="translate(214,250)">
+      <ellipse cx="0" cy="4" rx="9" ry="7" fill="#e6ddca"/>
+      <circle cx="-6" cy="-2" r="5" fill="#e6ddca"/>
+      <ellipse cx="-8" cy="-11" rx="2" ry="7" fill="#e6ddca"/><ellipse cx="-4" cy="-11" rx="2" ry="7" fill="#e6ddca"/>
+      <circle cx="-8" cy="-3" r="1" fill="#3a2a1a"/><circle cx="7" cy="4" r="2.5" fill="#fff"/>
+    </g></g>);
+  }
+  if (has("fox") && !mini) {
+    animals.push(<g key="fx" transform="translate(196,248)">
+      <ellipse cx="0" cy="4" rx="12" ry="7" fill="#e08a4a"/>
+      <path d="M10 4 q14 0 18 8 q-10 2 -18 -2Z" fill="#e08a4a"/>
+      <path d="M24 12 q6 -2 8 2" stroke="#fff" strokeWidth="3" fill="none" strokeLinecap="round"/>
+      <circle cx="-8" cy="0" r="5" fill="#e08a4a"/><path d="M-12 -4 l-2 -6 l5 3Z" fill="#e08a4a"/><path d="M-6 -4 l2 -6 l-5 3Z" fill="#e08a4a"/>
+      <circle cx="-10" cy="0" r="1" fill="#2a1e14"/>
+    </g>);
+  }
+  if (has("bird")) {
+    animals.push(<g key="bd" className="bird-bob"><g transform="translate(186,168)">
+      <ellipse cx="0" cy="0" rx="8" ry="6" fill="#e0a34e"/>
+      <circle cx="6" cy="-4" r="4" fill="#e0a34e"/>
+      <path d="M9 -4 l5 1 l-5 2Z" fill="#c9772f"/>
+      <circle cx="7" cy="-5" r="1" fill="#2a1e14"/>
+      <path d="M-6 0 q-8 -4 -10 2 q6 2 10 0Z" fill="#c98a3a"/>
+    </g></g>);
+  }
+  if (has("frog")) {
+    animals.push(<g key="fg" transform="translate(190,258)"><ellipse cx="0" cy="2" rx="8" ry="6" fill="#7bb26a"/><circle cx="-4" cy="-4" r="3" fill="#8fc47c"/><circle cx="4" cy="-4" r="3" fill="#8fc47c"/><circle cx="-4" cy="-4" r="1" fill="#123"/><circle cx="4" cy="-4" r="1" fill="#123"/></g>);
+  }
+
+  // flying things
+  const flyers = [];
+  if (has("butterfly")) {
+    flyers.push(<g key="bf" className="butterfly" style={{transformBox:"fill-box"}}><g transform="translate(120,150)">
+      <g className="bfly-wing"><ellipse cx="-4" cy="0" rx="5" ry="7" fill="#e68aa0"/><ellipse cx="4" cy="0" rx="5" ry="7" fill="#f0a9bd"/></g>
+      <rect x="-.8" y="-6" width="1.6" height="12" rx="1" fill="#5a4632"/>
+    </g></g>);
+  }
+  if (has("bee")) {
+    flyers.push(<g key="be" className="bee"><g transform="translate(175,140)">
+      <ellipse cx="0" cy="0" rx="6" ry="4.5" fill="#e8c04e"/>
+      <rect x="-3" y="-4.5" width="2" height="9" fill="#4a3a1a"/><rect x="1" y="-4.5" width="2" height="9" fill="#4a3a1a"/>
+      <ellipse cx="-3" cy="-4" rx="4" ry="2.5" fill="#fff" opacity=".8"/>
+    </g></g>);
+  }
+
+  // fireflies (night, from achievement)
+  const flies = [];
+  if (has("fireflies") || (night && stage>=4)) {
+    [[110,180,0],[190,150,1.1],[150,210,2.2],[210,190,.6],[90,210,1.7]].forEach(([x,y,d],i)=>{
+      flies.push(<circle key={"ff"+i} className="firefly" style={{animationDelay:d+"s"}} cx={x} cy={y} r="2.6" fill="#fff2a8"/>);
+    });
+  }
+
+  // stars at night
+  const stars = [];
+  if (night) {
+    [[40,40],[90,26],[210,34],[260,60],[300,30],[150,20],[330,90],[30,90]].forEach(([x,y],i)=>
+      stars.push(<circle key={"s"+i} cx={x} cy={y} r={i%3?1:1.6} fill="#fff" opacity=".8"/>));
+  }
+
+  return (
+    <svg viewBox="0 0 300 300" role="img" aria-label={`${STAGE_NAMES[stage]}, health ${Math.round(health)}%`}>
+      <defs>
+        <linearGradient id="grd" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor={night?"#38536a":"#86d466"}/>
+          <stop offset="1" stopColor={night?"#2b3f38":"#5fb84a"}/>
+        </linearGradient>
+        <radialGradient id="magic"><stop offset="0" stopColor="#dcc6f5"/><stop offset="1" stopColor="#dcc6f5" stopOpacity="0"/></radialGradient>
+      </defs>
+      {stars}
+      {/* ground */}
+      <path d={`M0 ${groundY} Q150 ${groundY-16} 300 ${groundY} L300 300 L0 300 Z`} fill="url(#grd)"/>
+      <ellipse cx="150" cy="256" rx="70" ry="12" fill="rgba(0,0,0,.08)"/>
+      {deco}
+      <g className="tree-sway" style={ faded ? { filter: "saturate(.7) brightness(.97)" } : null}>
+        <g style={ wilt ? { transform:`translateY(${droop*3}px)` } : null}>
+          {trunk}
+          <g style={ wilt ? { transform:`rotate(${droop*2}deg)`, transformOrigin:"150px 200px" } : null}>{canopy}</g>
+        </g>
+        {fallers}
+      </g>
+      {animals}
+      {flyers}
+      {flies}
+    </svg>
+  );
+}
+
+/* =====================================================================
+   MODULE: UI helpers
+   ===================================================================== */
+function money(cur, n) {
+  const neg = n < 0; n = Math.abs(n);
+  const s = n % 1 === 0 ? n.toLocaleString() : n.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
+  return (neg?"−":"") + cur + s;
+}
+function pct(n) { return Math.round(n); }
+
+/* =====================================================================
+   MODULE: Screens
+   ===================================================================== */
+function Home({ state, stats, cur, onAdd, goTree, goSettings, night }) {
+  const budgetUsed = stats.monthBudget ? (stats.monthSpent/stats.monthBudget) : 0;
+  const left = stats.monthBudget - stats.monthSpent;
+  const barColor = budgetUsed >= 1 ? "var(--alert)" : budgetUsed >= .85 ? "var(--warn)" : "linear-gradient(90deg,var(--leaf-lite),var(--leaf))";
+  const alert =
+    budgetUsed >= 1 ? { e:"🌾", t:"Budget reached", d:`You've used all of ${monthShort(stats.mk)}'s budget. That's okay — tomorrow's a fresh leaf.` } :
+    budgetUsed >= .85 ? { e:"🌱", t:"Tiny heads-up", d:`You've used ${pct(budgetUsed*100)}% of this month's budget. ${money(cur,left)} left.` } :
+    budgetUsed >= .70 ? { e:"🍃", t:"Gentle note", d:`${pct(budgetUsed*100)}% of budget used — ${money(cur,left)} to go.` } : null;
+
+  return (
+    <div className="screen fade-in">
+      <div className="topbar">
+        <div className="brand"><div className="logo">🌳</div><h1 className="serif">Little Forest</h1></div>
+        <button className="iconbtn" onClick={goSettings} aria-label="Settings">⚙️</button>
+      </div>
+      <div className="scroll">
+        <div className="scene-wrap" onClick={goTree} role="button" aria-label="Open My Tree">
+          <div className={"scene"+(night?" night":"")}>
+            <div className="sun-orb"/>
+            <TreeScene stats={stats} treeType={stats.treeType} unlocked={stats.rewardKeys} night={night} acornCount={stats.acornCount}/>
+          </div>
+        </div>
+        <div className="spacer-14"/>
+        <div className="card">
+          <div className="money-row">
+            <div>
+              <div className="eyebrow">{monthShort(stats.mk)} · spent</div>
+              <div className="money-big serif tnum">{money(cur, stats.monthSpent)}</div>
+            </div>
+            <div style={{textAlign:"right"}}>
+              <div className="money-sub tnum">{money(cur, Math.max(0,left))} left</div>
+              <div className="chip" style={{marginTop:6}}>🌱 {stats.streak}-day streak</div>
+            </div>
+          </div>
+          <div className="spacer-8"/>
+          <div className="bar"><i style={{width: Math.min(100,budgetUsed*100)+"%", background: barColor}}/></div>
+          <div style={{display:"flex",justifyContent:"space-between",marginTop:6}} className="hint tnum">
+            <span>{pct(Math.min(100,budgetUsed*100))}% of {money(cur,stats.monthBudget)}</span>
+            <span>{stats.loggedToday ? "💧 tree watered today" : "🌿 log to water your tree"}</span>
+          </div>
+          {(stats.monthIncome>0 || stats.netSaved>0) && (
+            <div style={{display:"flex",gap:10,marginTop:12,paddingTop:12,borderTop:"1px solid var(--line)"}}>
+              <div style={{flex:1,textAlign:"center"}}>
+                <div className="eyebrow">💼 Earned</div>
+                <div className="serif tnum" style={{fontSize:20,fontWeight:600,color:"var(--good)"}}>{money(cur,stats.monthIncome)}</div>
+              </div>
+              <div style={{width:1,background:"var(--line)"}}/>
+              <div style={{flex:1,textAlign:"center"}}>
+                <div className="eyebrow">🌰 Saved</div>
+                <div className="serif tnum" style={{fontSize:20,fontWeight:600,color:"var(--good)"}}>{money(cur,stats.netSaved)}</div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {alert && <><div className="spacer-14"/><div className="insight"><div className="ie">{alert.e}</div><div><div style={{fontWeight:800,fontSize:14}}>{alert.t}</div><div className="hint">{alert.d}</div></div></div></>}
+
+        <div className="spacer-20"/>
+        <div className="section-title">Today</div>
+        <div className="card" style={{padding:"6px 16px"}}>
+          {stats.todays.length === 0 ? (
+            <div className="empty" style={{padding:"22px"}}><div className="e">🍃</div><div style={{fontWeight:700,marginTop:6}}>Nothing logged yet today</div><div className="hint">Tap the big button to add your first entry — it takes 5 seconds.</div></div>
+          ) : stats.todays.map(e => {
+            const inc = typeOf(e) === "income";
+            return (
+              <div className="row" key={e.id}>
+                <div className="emoji" style={inc?{background:"color-mix(in srgb,var(--good) 18%,var(--surface-2))"}:null}>{catInfo(e.category).emoji}</div>
+                <div className="grow"><div className="name">{catInfo(e.category).label}{inc && " · earned"}</div>{e.note && <div className="meta">{e.note}</div>}</div>
+                <div className="amt tnum" style={inc?{color:"var(--good)"}:null}>{inc?"+":""}{money(cur, e.amount)}</div>
+              </div>
+            );
+          })}
+        </div>
+        <div className="spacer-20"/>
+        <div className="hint" style={{textAlign:"center"}}>Your {STAGE_NAMES[stats.stage].toLowerCase()} is growing · level {stats.level}</div>
+      </div>
+    </div>
+  );
+}
+
+function TreePage({ stats, cur, night, goForest }) {
+  const unlockedAch = ACHIEVEMENTS.filter(a => stats.unlocked.includes(a.id));
+  const friends = ACHIEVEMENTS.filter(a => a.reward.kind==="animal");
+  const decos = ACHIEVEMENTS.filter(a => a.reward.kind==="nature");
+  const daysGrowing = Math.max(1, stats.daysIntoCycle);
+  return (
+    <div className="screen fade-in">
+      <div className="topbar"><div className="brand"><div className="logo">🌱</div><h1 className="serif">My Tree</h1></div>
+        <div className="chip">🌳 {STAGE_NAMES[stats.stage]}</div></div>
+      <div className="scroll">
+        <div className={"scene"+(night?" night":"")} style={{aspectRatio:"1/1.05"}}>
+          <div className="sun-orb"/>
+          <TreeScene stats={stats} treeType={stats.treeType} unlocked={stats.rewardKeys} night={night} acornCount={stats.acornCount}/>
+        </div>
+        <div className="spacer-14"/>
+        <div style={{display:"flex",justifyContent:"center",alignItems:"center",gap:8,flexWrap:"wrap"}}>
+          <div className="hint" style={{fontWeight:700}}>Growing for {daysGrowing} {daysGrowing===1?"day":"days"} this {monthShort(stats.mk)} cycle</div>
+          {stats.netSaved>0 && <div className="chip">🌰 {money(cur,stats.netSaved)} saved</div>}
+        </div>
+        <div className="spacer-14"/>
+        <div className="card">
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+            <div className="eyebrow">Growth</div><div className="hint tnum">{pct(stats.growthProgress)}%</div>
+          </div>
+          <div className="spacer-8"/>
+          <div className="bar"><i style={{width:stats.growthProgress+"%",background:"linear-gradient(90deg,var(--leaf-lite),var(--leaf))"}}/></div>
+          <div className="spacer-14"/>
+          <div className="tstat-grid">
+            <div className="tstat"><div className="n tnum">🏆 {unlockedAch.length}</div><div className="l">achievements</div></div>
+            <div className="tstat"><div className="n tnum">🦋 {stats.unlocked.filter(id=>ACH_BY_ID[id]&&ACH_BY_ID[id].reward.kind==="animal").length}</div><div className="l">forest friends</div></div>
+            <div className="tstat"><div className="n tnum">💚 {pct(stats.health)}%</div><div className="l">health</div></div>
+          </div>
+        </div>
+        <div className="spacer-20"/>
+        <div className="section-title">Forest friends</div>
+        <div className="card">
+          <div className="friend-strip">
+            {friends.map(a => <div key={a.id} className={"friend"+(stats.unlocked.includes(a.id)?"":" locked")}>{a.reward.emoji||a.icon} {a.reward.label}</div>)}
+          </div>
+        </div>
+        <div className="spacer-20"/>
+        <div className="section-title">Achievements</div>
+        <div className="card" style={{padding:"4px 16px"}}>
+          {ACHIEVEMENTS.map(a => {
+            const on = stats.unlocked.includes(a.id);
+            return (
+              <div key={a.id} className={"ach-item"+(on?"":" locked")}>
+                <div className="ach-badge">{on?a.icon:"🔒"}</div>
+                <div className="ach-txt"><div className="t">{a.title}</div><div className="d">{a.desc}</div>
+                  <div className="r">{on?`Unlocked · ${a.reward.label}`:`Reward · ${a.reward.label}`}</div></div>
+              </div>
+            );
+          })}
+        </div>
+        <div className="spacer-14"/>
+        <button className="ghost-btn" onClick={goForest}>🌲 See my whole forest →</button>
+        <div className="spacer-20"/>
+      </div>
+    </div>
+  );
+}
+
+function Reports({ state, stats, cur }) {
+  const [tab, setTab] = useState("week");
+  return (
+    <div className="screen fade-in">
+      <div className="topbar"><div className="brand"><div className="logo">📊</div><h1 className="serif">Reports</h1></div></div>
+      <div className="scroll">
+        <div className="seg">
+          <button className={tab==="week"?"on":""} onClick={()=>setTab("week")}>This week</button>
+          <button className={tab==="month"?"on":""} onClick={()=>setTab("month")}>This month</button>
+        </div>
+        <div className="spacer-14"/>
+        {tab==="week" ? <WeekReport state={state} stats={stats} cur={cur}/> : <MonthReport state={state} stats={stats} cur={cur}/>}
+        <div className="spacer-20"/>
+      </div>
+    </div>
+  );
+}
+
+function catBars(exp, cur) {
+  const by = {}; for (const e of exp) by[e.category]=(by[e.category]||0)+e.amount;
+  const max = Math.max(1, ...Object.values(by));
+  return CATEGORIES.filter(c=>by[c.key]).sort((a,b)=>by[b.key]-by[a.key]).map(c=>(
+    <div className="catbar-row" key={c.key}>
+      <div className="lab">{c.emoji} {c.label}</div>
+      <div className="track"><i style={{width:(by[c.key]/max*100)+"%",background:c.color}}/></div>
+      <div className="amt tnum">{money(cur,by[c.key])}</div>
+    </div>
+  ));
+}
+
+function WeekReport({ state, stats, cur }) {
+  const wStart = now() - 6*86400000;
+  const allWeek = state.expenses.filter(e => e.ts >= new Date(dayKey(wStart)).getTime());
+  const week = allWeek.filter(e => typeOf(e) === "expense");
+  const earned = allWeek.filter(e => typeOf(e) === "income").reduce((a,e)=>a+e.amount,0);
+  const prevWeek = state.expenses.filter(e => typeOf(e)==="expense" && e.ts >= new Date(dayKey(now()-13*86400000)).getTime() && e.ts < new Date(dayKey(wStart)).getTime());
+  const total = week.reduce((a,e)=>a+e.amount,0);
+  const prevTotal = prevWeek.reduce((a,e)=>a+e.amount,0);
+  const diff = total - prevTotal;
+  const daysTracked = new Set(allWeek.map(e=>dayKey(e.ts))).size;
+  const newAch = ACHIEVEMENTS.filter(a=>stats.unlocked.includes(a.id)).slice(-1)[0];
+  return (
+    <>
+      <div className="card" style={{textAlign:"center"}}>
+        <div className="eyebrow">🌸 Your week · you spent</div>
+        <div className="serif tnum" style={{fontSize:44,fontWeight:600,letterSpacing:"-.02em"}}>{money(cur,total)}</div>
+        {prevTotal>0 && <div style={{fontWeight:800,marginTop:2}} className={diff<=0?"delta-down":"delta-up"}>
+          {diff<=0? `That's ${money(cur,-diff)} less than last week 🎉` : `${money(cur,diff)} more than last week`}</div>}
+      </div>
+      <div className="spacer-14"/>
+      <div className="statgrid">
+        <div className="stat"><div className="k">Days tracked</div><div className="v tnum">{daysTracked} / 7</div></div>
+        <div className="stat"><div className="k">Current streak</div><div className="v tnum">🔥 {stats.streak}</div></div>
+        {earned>0 && <div className="stat"><div className="k">💼 Earned</div><div className="v tnum" style={{color:"var(--good)"}}>{money(cur,earned)}</div></div>}
+        {earned>0 && <div className="stat"><div className="k">🌰 Net saved</div><div className="v tnum" style={{color:"var(--good)"}}>{money(cur,Math.max(0,earned-total))}</div></div>}
+      </div>
+      <div className="spacer-14"/>
+      <div className="card"><div className="eyebrow">Where it went</div><div className="spacer-8"/>{week.length?catBars(week,cur):<div className="hint">No expenses this week yet.</div>}</div>
+      <div className="spacer-14"/>
+      <div className="insight"><div className="ie">🌿</div><div><div style={{fontWeight:800,fontSize:14}}>Your tree grew</div>
+        <div className="hint">{daysTracked>=5?"Beautiful consistency this week — new leaves are showing.":"A few check-ins already. Every log helps it grow."}</div></div></div>
+      {newAch && <><div className="spacer-14"/><div className="insight" style={{background:"linear-gradient(150deg,color-mix(in srgb,var(--bloom) 20%,var(--surface)),var(--surface))"}}>
+        <div className="ie">{newAch.icon}</div><div><div style={{fontWeight:800,fontSize:14}}>Latest reward · {newAch.title}</div><div className="hint">{newAch.reward.label} joined your forest.</div></div></div></>}
+    </>
+  );
+}
+
+function MonthReport({ state, stats, cur }) {
+  const left = stats.monthBudget - stats.monthSpent;
+  const under = left >= 0;
+  const deltas = CATEGORIES.map(c => {
+    const cur_ = stats.monthCat[c.key]||0, prev = stats.prevCat[c.key]||0;
+    if (!cur_ && !prev) return null;
+    const d = prev ? (cur_-prev)/prev*100 : 100;
+    return { c, d, cur_, prev };
+  }).filter(Boolean);
+  const wins = [];
+  if (stats.netSaved>0) wins.push(`Saved ${money(cur,stats.netSaved)} this cycle`);
+  if (under) wins.push(`Stayed under budget — ${money(cur,left)} to spare`);
+  if ((stats.monthCat.food||0) < (stats.prevCat.food||0)) wins.push("Spent less on food than last month");
+  if (stats.prevSpent>0 && stats.monthSpent<stats.prevSpent) wins.push("Spent less than last month overall");
+  wins.push(`Logged ${stats.trackedThisMonth} ${stats.trackedThisMonth===1?"day":"days"} this cycle`);
+  const newAch = ACHIEVEMENTS.filter(a=>stats.unlocked.includes(a.id) && a.reward.kind==="animal").slice(-1)[0];
+  return (
+    <>
+      <div className="card" style={{textAlign:"center"}}>
+        <div className="eyebrow">🌙 {monthShort(stats.mk)} · total spent</div>
+        <div className="serif tnum" style={{fontSize:44,fontWeight:600,letterSpacing:"-.02em"}}>{money(cur,stats.monthSpent)}</div>
+        <div style={{fontWeight:800,marginTop:2}} className={under?"delta-down":"delta-up"}>
+          {under? `Under budget by ${money(cur,left)} 🎉` : `Over budget by ${money(cur,-left)} — gently noted`}</div>
+        <div className="spacer-8"/>
+        <div className="bar"><i style={{width:Math.min(100,stats.monthSpent/stats.monthBudget*100)+"%",background: under?"linear-gradient(90deg,var(--leaf-lite),var(--leaf))":"var(--warn)"}}/></div>
+        <div className="hint tnum" style={{marginTop:6}}>Budget {money(cur,stats.monthBudget)}</div>
+      </div>
+      {stats.monthIncome>0 && <><div className="spacer-14"/>
+        <div className="statgrid">
+          <div className="stat"><div className="k">💼 Earned</div><div className="v tnum" style={{color:"var(--good)"}}>{money(cur,stats.monthIncome)}</div></div>
+          <div className="stat"><div className="k">🌰 Saved</div><div className="v tnum" style={{color:"var(--good)"}}>{money(cur,stats.netSaved)}</div></div>
+        </div></>}
+      <div className="spacer-14"/>
+      <div className="card"><div className="eyebrow">Spending by category</div><div className="spacer-8"/>{stats.monthExp.length?catBars(stats.monthExp,cur):<div className="hint">Nothing logged this month yet.</div>}</div>
+      {stats.prevSpent>0 && deltas.length>0 && <><div className="spacer-14"/>
+        <div className="card"><div className="eyebrow">Compared with {monthShort(stats.prevMk)}</div><div className="spacer-8"/>
+          {deltas.sort((a,b)=>Math.abs(b.d)-Math.abs(a.d)).slice(0,4).map(({c,d})=>(
+            <div key={c.key} style={{display:"flex",justifyContent:"space-between",padding:"7px 2px",fontWeight:700,fontSize:14,borderBottom:"1px solid var(--line)"}}>
+              <span>{c.emoji} {c.label}</span><span className={d<=0?"delta-down":"delta-up"}>{d<=0?"↓":"↑"} {Math.abs(Math.round(d))}%</span>
+            </div>
+          ))}
+        </div></>}
+      <div className="spacer-14"/>
+      <div className="card"><div className="eyebrow">Monthly wins</div><div className="spacer-8"/>
+        {wins.map((w,i)=><div className="win" key={i}><span className="ck">✓</span> {w}</div>)}
+      </div>
+      {newAch && <><div className="spacer-14"/><div className="insight"><div className="ie">{newAch.icon}</div>
+        <div><div style={{fontWeight:800,fontSize:14}}>New forest friend · {newAch.title}</div><div className="hint">{newAch.reward.label} now lives in your forest.</div></div></div></>}
+    </>
+  );
+}
+
+function Forest({ state, stats, cur, night }) {
+  // build month tiles from earliest expense to current
+  const months = useMemo(() => {
+    if (!state.expenses.length) return [cycleKey(now())];
+    const keys = new Set(state.expenses.map(e=>cycleKey(e.ts)));
+    keys.add(cycleKey(now()));
+    return [...keys].sort().reverse();
+  }, [state.expenses]);
+  const curMk = cycleKey(now());
+  const unlockedAnimals = ACHIEVEMENTS.filter(a=>a.reward.kind==="animal" && stats.unlocked.includes(a.id));
+
+  return (
+    <div className="screen fade-in">
+      <div className="topbar"><div className="brand"><div className="logo">🌲</div><h1 className="serif">My Forest</h1></div>
+        <div className="chip">🌳 {months.length} {months.length===1?"tree":"trees"}</div></div>
+      <div className="scroll">
+        <div className="hint" style={{textAlign:"center",marginBottom:12}}>Every month grows a new tree. This is your financial journey.</div>
+        <div className="forest-grid">
+          {months.map(mk => {
+            const monthExp = state.expenses.filter(e=>cycleKey(e.ts)===mk);
+            const tracked = new Set(monthExp.map(e=>dayKey(e.ts))).size;
+            const isCur = mk===curMk;
+            const gp = isCur ? stats.growthProgress : Math.min(100, tracked*8 + Math.min(monthExp.length,20));
+            const tileStats = { stage: growthStageFromProgress(gp), health: 100, growthProgress: gp };
+            const tType = treeTypeForMonth(mk);
+            const done = !isCur;
+            // which unlocked animals to sprinkle (cumulative, capped)
+            const friendIcons = unlockedAnimals.slice(0,4).map(a=>a.icon);
+            const decoKeys = ACHIEVEMENTS.filter(a=>a.reward.kind==="nature" && stats.unlocked.includes(a.id)).map(a=>a.reward.key);
+            const animalKeys = unlockedAnimals.map(a=>a.reward.key);
+            const cycSpent = monthExp.filter(e=>typeOf(e)==="expense").reduce((a,e)=>a+e.amount,0);
+            const cycInc = monthExp.filter(e=>typeOf(e)==="income").reduce((a,e)=>a+e.amount,0);
+            const tileAcorns = isCur ? stats.acornCount : Math.min(6, Math.max(1, Math.round(Math.max(0,cycInc-cycSpent)/Math.max(20,stats.monthBudget/14))));
+            return (
+              <div className="forest-tile" key={mk}>
+                <div className="mini">
+                  <TreeScene stats={tileStats} treeType={tType} unlocked={isCur?[...decoKeys,...animalKeys]:decoKeys} night={false} mini acornCount={tileAcorns}/>
+                </div>
+                <div className="fm">
+                  <div className="mo">{monthShort(mk)}</div>
+                  <div className="st" style={{background: done?"color-mix(in srgb,var(--leaf) 22%,var(--surface))":"var(--surface-2)", color: done?"var(--leaf-deep)":"var(--ink-soft)"}}>{done?"Complete":`${pct(gp)}%`}</div>
+                </div>
+                <div className="friends-mini">{isCur?friendIcons.map((f,i)=><span key={i}>{f}</span>):null}</div>
+              </div>
+            );
+          })}
+        </div>
+        <div className="spacer-20"/>
+        <div className="card">
+          <div className="section-title">Forest companions</div>
+          <div className="hint" style={{marginBottom:10}}>Unlocked by achievements — they appear on their own, no arranging needed.</div>
+          <div className="friend-strip">
+            {ACHIEVEMENTS.filter(a=>a.reward.kind==="animal").map(a=>
+              <div key={a.id} className={"friend"+(stats.unlocked.includes(a.id)?"":" locked")}>{a.icon} {a.reward.label}</div>)}
+          </div>
+        </div>
+        <div className="spacer-20"/>
+        <div className="hint" style={{textAlign:"center"}}>"Your financial journey" 🌿</div>
+        <div className="spacer-20"/>
+      </div>
+    </div>
+  );
+}
+
+function Settings({ state, stats, cur, dispatch, onClose }) {
+  const [budget, setBudget] = useState(String(stats.monthBudget));
+  const [currency, setCurrency] = useState(state.prefs.currency);
+  const [startDay, setStartDay] = useState(state.prefs.cycleStartDay || 25);
+  const [reminders, setReminders] = useState(state.prefs.reminders);
+  const [confirmClear, setConfirmClear] = useState(false);
+  const [perm, setPerm] = useState(notifPerm());
+  const [testMsg, setTestMsg] = useState("");
+
+  const save = () => {
+    const b = parseFloat(budget); if (!isNaN(b) && b>0) dispatch({type:"SET_BUDGET", amount:b});
+    dispatch({type:"SET_CURRENCY", currency});
+    dispatch({type:"SET_CYCLE_START", day: Number(startDay)});
+    dispatch({type:"SET_REMINDERS", reminders});
+    onClose();
+  };
+  const toggleReminder = (id) => setReminders(rs => rs.map(r=>r.id===id?{...r,enabled:!r.enabled}:r));
+  const setTime = (id,time) => setReminders(rs => rs.map(r=>r.id===id?{...r,time}:r));
+  const setCat = (id,category) => setReminders(rs => rs.map(r=>r.id===id?{...r,category:category||null}:r));
+  const addReminder = () => setReminders(rs => [...rs, {id:"r"+now(), time:"18:00", category:null, enabled:true}]);
+  const removeReminder = (id) => setReminders(rs => rs.filter(r=>r.id!==id));
+
+  const enableNotifs = async () => {
+    const p = await requestNotifPermission();
+    setPerm(p);
+    if (p === "granted") { enableBackgroundNudge(); const ok = await notify("Little Forest 🌿", "Notifications are on! Your forest will give you a gentle nudge."); setTestMsg(ok ? "Sent a welcome notification ✨" : "Granted, but this preview blocked the popup — see the note below."); }
+    else if (p === "denied") setTestMsg("Notifications are blocked in your browser settings for this site.");
+  };
+  const sendTest = async () => {
+    if (perm !== "granted") { setTestMsg("Turn on notifications first."); return; }
+    const ok = await notify("Little Forest 🌿", "🍜 Did you have lunch? A quick check-in keeps your tree happy.");
+    setTestMsg(ok ? "Test notification sent ✨" : "Couldn't show it here — try the installed app (see note below).");
+  };
+
+  return (
+    <div className="screen fade-in">
+      <div className="topbar"><div className="brand"><div className="logo">⚙️</div><h1 className="serif">Settings</h1></div>
+        <button className="iconbtn" onClick={onClose} aria-label="Close">✕</button></div>
+      <div className="scroll">
+        <div className="card">
+          <div className="field">
+            <label>Monthly budget</label>
+            <input type="number" inputMode="decimal" value={budget} onChange={e=>setBudget(e.target.value)}/>
+          </div>
+          <div className="field">
+            <label>Cycle start day</label>
+            <select value={startDay} onChange={e=>setStartDay(Number(e.target.value))}>
+              {Array.from({length:28},(_,i)=>i+1).map(d=><option key={d} value={d}>{ordinal(d)} of the month</option>)}
+            </select>
+            <div className="hint" style={{marginTop:6}}>{Number(startDay)===1
+              ? <>Each cycle is a whole calendar month — the 1st to the last day.</>
+              : <>Each cycle runs from the <b>{ordinal(Number(startDay))}</b> of one month to the <b>{ordinal(Number(startDay)-1)}</b> of the next, named after the month it ends in — so the {ordinal(Number(startDay))} begins a new cycle.</>}</div>
+          </div>
+          <div className="field">
+            <label>Currency symbol</label>
+            <select value={currency} onChange={e=>setCurrency(e.target.value)}>
+              {["$","£","€","¥","₹","₩","R$","A$","C$","kr","zł"].map(c=><option key={c} value={c}>{c}</option>)}
+            </select>
+          </div>
+        </div>
+        <div className="spacer-14"/>
+        <div className="card">
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+            <div className="section-title">Gentle reminders</div>
+            <button className="linkish" onClick={addReminder}>+ Add</button>
+          </div>
+          <div style={{display:"flex",alignItems:"center",gap:8,margin:"4px 0 10px",flexWrap:"wrap"}}>
+            <span className="chip" style={{background: perm==="granted"?"color-mix(in srgb,var(--good) 20%,var(--surface-2))":"var(--surface-2)"}}>
+              {perm==="granted"?"🔔 On":perm==="denied"?"🔕 Blocked":perm==="unsupported"?"🔕 Unsupported":"🔔 Off"}
+            </span>
+            {perm!=="granted" && perm!=="unsupported" && <button className="linkish" style={{padding:"6px 4px"}} onClick={enableNotifs}>Enable notifications</button>}
+            {perm==="granted" && <button className="linkish" style={{padding:"6px 4px"}} onClick={sendTest}>Send test</button>}
+          </div>
+          {testMsg && <div className="hint" style={{marginBottom:8,color:"var(--leaf-deep)",fontWeight:700}}>{testMsg}</div>}
+          {reminders.map(r => (
+            <div className="reminder-row" key={r.id}>
+              <button className={"toggle"+(r.enabled?" on":"")} onClick={()=>toggleReminder(r.id)} aria-label="Toggle reminder"/>
+              <input type="time" value={r.time} onChange={e=>setTime(r.id,e.target.value)} style={{width:110,border:"1.5px solid var(--line)",borderRadius:12,padding:"8px",background:"var(--surface)",color:"var(--ink)",fontFamily:"inherit"}}/>
+              <select value={r.category||""} onChange={e=>setCat(r.id,e.target.value)} style={{flex:1,border:"1.5px solid var(--line)",borderRadius:12,padding:"8px",background:"var(--surface)",color:"var(--ink)",fontFamily:"inherit"}}>
+                <option value="">General</option>
+                {CATEGORIES.map(c=><option key={c.key} value={c.key}>{c.emoji} {c.label}</option>)}
+              </select>
+              <button className="linkish danger" onClick={()=>removeReminder(r.id)} aria-label="Remove">✕</button>
+            </div>
+          ))}
+          <div className="hint" style={{marginTop:10,lineHeight:1.55}}>
+            <b>How notifications work:</b> reminders fire reliably while Little Forest is open in a tab.
+            To get nudges when it's closed, tap your browser menu → <b>Add to Home screen</b> to install it — the built-in
+            service worker then shows notifications and, where your phone supports it, a daily background check-in.
+            Guaranteed on-the-minute delivery while fully closed needs Web Push (a small server) — ask and I'll wire that up.
+          </div>
+        </div>
+        <div className="spacer-14"/>
+        <button className="save-btn" onClick={save}>Save settings</button>
+        <div className="spacer-20"/>
+        <div className="card">
+          <div className="section-title">Your data</div>
+          <div className="hint" style={{marginBottom:10}}>Everything is stored privately on this device. No account, no cloud.</div>
+          {!confirmClear ? (
+            <button className="ghost-btn danger" onClick={()=>setConfirmClear(true)}>Start fresh (clear demo data)</button>
+          ) : (
+            <div style={{display:"flex",gap:8}}>
+              <button className="ghost-btn" onClick={()=>setConfirmClear(false)}>Keep</button>
+              <button className="ghost-btn danger" onClick={()=>{dispatch({type:"CLEAR"});onClose();}}>Clear everything</button>
+            </div>
+          )}
+          <div className="spacer-8"/>
+          <button className="ghost-btn" onClick={()=>{dispatch({type:"RESEED"});onClose();}}>Reload demo data</button>
+        </div>
+        <div className="spacer-20"/>
+        <div className="hint" style={{textAlign:"center"}}>Little Forest · v1 · made for calm money habits 🌿</div>
+        <div className="spacer-20"/>
+      </div>
+    </div>
+  );
+}
+
+/* =====================================================================
+   MODULE: Add sheet  (target: under 5 seconds)
+   ===================================================================== */
+function AddSheet({ state, cur, onClose, onSave }) {
+  const recentCat = useMemo(() => {
+    const last = [...state.expenses].filter(e=>typeOf(e)==="expense").sort((a,b)=>b.ts-a.ts)[0];
+    return last ? last.category : "food";
+  }, [state.expenses]);
+  const [mode, setMode] = useState("expense");      // "expense" | "income"
+  const [amount, setAmount] = useState("");
+  const [category, setCategory] = useState(recentCat);
+  const [showNote, setShowNote] = useState(false);
+  const [note, setNote] = useState("");
+  const cats = mode === "income" ? INCOME_CATS : CATEGORIES;
+  const switchMode = (m) => { setMode(m); setCategory(m === "income" ? "salary" : recentCat); };
+
+  const pushDigit = (d) => setAmount(a => {
+    if (d==="." && a.includes(".")) return a;
+    if (a.includes(".") && a.split(".")[1].length>=2) return a;
+    if (a==="0" && d!==".") return d;
+    if (a.length>=8) return a;
+    return a + d;
+  });
+  const back = () => setAmount(a => a.slice(0,-1));
+  const value = parseFloat(amount||"0");
+  const canSave = value > 0;
+
+  const doSave = () => { if (canSave) onSave(value, category, note.trim(), mode); };
+
+  return (
+    <div className="sheet-scrim" onClick={onClose}>
+      <div className="sheet" onClick={e=>e.stopPropagation()}>
+        <div className="grabber"/>
+        <div className="seg" style={{marginBottom:6}}>
+          <button className={mode==="expense"?"on":""} onClick={()=>switchMode("expense")}>💸 Spent</button>
+          <button className={mode==="income"?"on":""} onClick={()=>switchMode("income")}>💼 Earned</button>
+        </div>
+        <div className="amount-display">
+          <div className="q">{mode==="income"?"How much came in?":"How much?"}</div>
+          <div className={"val serif tnum"+(amount?"":" empty")} style={mode==="income"?{color:"var(--good)"}:null}><span className="cur">{cur}</span>{amount||"0"}</div>
+        </div>
+        <div className="recent-lbl">{mode==="income"?"Source":"Category"}</div>
+        <div className="catgrid" style={mode==="income"?{gridTemplateColumns:"repeat(3,1fr)"}:null}>
+          {cats.map(c => (
+            <button key={c.key} className={"cat"+(category===c.key?" sel":"")} onClick={()=>setCategory(c.key)}>
+              <span className="ce">{c.emoji}</span>{c.label}
+            </button>
+          ))}
+        </div>
+        {showNote ? (
+          <input className="note-input" placeholder="Add a note (optional)" value={note} onChange={e=>setNote(e.target.value)} maxLength={40}/>
+        ) : (
+          <div style={{textAlign:"center"}}><button className="linkish" onClick={()=>setShowNote(true)}>+ Add a note</button></div>
+        )}
+        <div className="keypad">
+          {["1","2","3","4","5","6","7","8","9",".","0"].map(k => <button key={k} className="key" onClick={()=>pushDigit(k)}>{k}</button>)}
+          <button className="key" onClick={back} aria-label="Delete">⌫</button>
+        </div>
+        <button className="save-btn" disabled={!canSave} onClick={doSave}>Save {canSave?money(cur,value):""} ✨</button>
+      </div>
+    </div>
+  );
+}
+
+/* =====================================================================
+   MODULE: Reward overlay + achievement toasts
+   ===================================================================== */
+const GROW_LINES = [
+  "Your tree grew a little! 🌱","A new leaf unfurled 🍃","A tiny bud opened 🌸",
+  "Sunlight touched your tree ☀️","Your forest feels happier 🌿","A leaf shimmered ✨",
+];
+function RewardOverlay({ cur, amount, recovered, kind, onDone }) {
+  useEffect(() => { const t = setTimeout(onDone, 1700); return () => clearTimeout(t); }, []);
+  const income = kind === "income";
+  const sparks = income ? ["🌰","✨","💰","🍃","🌟","✨"] : ["✨","🍃","🌟","💫","🌱","✨"];
+  const emoji = income ? "🌰" : (recovered ? "💧" : "🌱");
+  const sub = income ? "Money in! Your stash is growing 🌰"
+                     : (recovered ? "Your tree is feeling better!" : GROW_LINES[Math.floor(Math.random()*GROW_LINES.length)]);
+  return (
+    <div className="reward" onClick={onDone}>
+      {sparks.map((s,i)=>{ const a=(i/sparks.length)*Math.PI*2; return (
+        <span key={i} className="spark" style={{ "--dx": Math.cos(a)*90+"px", "--dy": Math.sin(a)*90+"px", left:"50%", top:"46%", animationDelay:(i*0.05)+"s" }}>{s}</span>
+      );})}
+      <div className="card-r">
+        <div className="reward-emoji">{emoji}</div>
+        <div className="big serif" style={{color:"#fff",textShadow:"0 2px 8px rgba(0,0,0,.35)"}}>{income?"Nice! ✨":"Logged! ✨"}</div>
+        <div className="sub">{sub}</div>
+      </div>
+    </div>
+  );
+}
+function Toasts({ items, onExpire }) {
+  useEffect(() => { if (!items.length) return; const t = setTimeout(onExpire, 3200); return () => clearTimeout(t); }, [items]);
+  if (!items.length) return null;
+  return (
+    <div className="toast-wrap">
+      {items.map(a => (
+        <div className="toast" key={a.id}>
+          <div className="te">{a.icon}</div>
+          <div><div className="tt">Achievement · {a.title}</div><div className="ts">{a.reward.label} joined your forest</div></div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+/* =====================================================================
+   MODULE: notifications — real web notifications via a service worker
+   ===================================================================== */
+let swReg = null;
+let swReady = (async () => {
+  if (!("serviceWorker" in navigator)) return null;
+  try { swReg = await navigator.serviceWorker.register("sw.js"); return swReg; }
+  catch (e) { swReg = null; return null; }        // e.g. inside the sandboxed preview
+})();
+const notifSupported = () => ("Notification" in window);
+const notifPerm = () => (notifSupported() ? Notification.permission : "unsupported");
+async function requestNotifPermission() {
+  if (!notifSupported()) return "unsupported";
+  try { return await Notification.requestPermission(); } catch (e) { return notifPerm(); }
+}
+async function notify(title, body) {
+  if (notifPerm() !== "granted") return false;
+  const opts = { body, icon: "icon.svg", badge: "icon.svg", tag: "little-forest", renotify: true };
+  try {
+    const reg = swReg || (await swReady);
+    if (reg && reg.showNotification) { await reg.showNotification(title, opts); return true; }
+    new Notification(title, opts); return true;
+  } catch (e) {
+    try { new Notification(title, { body }); return true; } catch (_) { return false; }
+  }
+}
+async function enableBackgroundNudge() {
+  try {
+    const reg = swReg || (await swReady);
+    if (reg && "periodicSync" in reg) {
+      const st = await navigator.permissions.query({ name: "periodic-background-sync" });
+      if (st.state === "granted") { await reg.periodicSync.register("forest-reminder", { minInterval: 24*60*60*1000 }); return true; }
+    }
+  } catch (e) {}
+  return false;
+}
+
+/* =====================================================================
+   MODULE: App root
+   ===================================================================== */
+function App() {
+  const [state, dispatch] = useReducer(reducer, undefined, loadState);
+  const [tab, setTab] = useState("home");
+  const [showAdd, setShowAdd] = useState(false);
+  const [reward, setReward] = useState(null);
+  const [toasts, setToasts] = useState([]);
+  const prevUnlocked = useRef(null);
+  const firedRef = useRef({});
+
+  useEffect(() => saveState(state), [state]);
+
+  setCycleStartDay(state.prefs.cycleStartDay);   // keep cycle math in sync before deriving stats
+  const stats = useMemo(() => buildStats(state), [state]);
+  const cur = state.prefs.currency;
+  const hour = new Date().getHours();
+  const night = hour >= 19 || hour < 6;
+
+  // initialise seen achievements baseline on first mount
+  useEffect(() => {
+    if (prevUnlocked.current === null) prevUnlocked.current = new Set(stats.unlocked);
+  }, []);
+
+  // reminders: while app open, fire a local notification near the set time (best-effort)
+  useEffect(() => {
+    const iv = setInterval(() => {
+      if (notifPerm() !== "granted") return;
+      const d = new Date(); const hm = String(d.getHours()).padStart(2,"0")+":"+String(d.getMinutes()).padStart(2,"0");
+      for (const r of state.prefs.reminders) {
+        if (!r.enabled) continue;
+        const key = dayKey(now())+"-"+r.id;
+        if (r.time === hm && !firedRef.current[key]) {
+          firedRef.current[key] = true;
+          const c = r.category ? CAT[r.category] : null;
+          const msg = c ? `${c.emoji} Did you spend on ${c.label.toLowerCase()}?` : "🌙 Time for a little forest check-in.";
+          notify("Little Forest", msg);
+        }
+      }
+    }, 20000);
+    return () => clearInterval(iv);
+  }, [state.prefs.reminders]);
+
+  const handleSave = (amount, category, note, kind) => {
+    const wasWilting = stats.health < 70;
+    const before = new Set(stats.unlocked);
+    const action = { type:"ADD", amount, category, note, kind };
+    dispatch(action);
+    setShowAdd(false);
+    setReward({ amount, recovered: wasWilting, kind });
+    // detect new achievements after state settles
+    setTimeout(() => {
+      const s2 = buildStats(reducer(state, action));
+      const newly = s2.unlocked.filter(id => !before.has(id));
+      if (newly.length) {
+        const items = newly.map(id => ({ ...ACH_BY_ID[id] }));
+        setTimeout(() => setToasts(items), 1600);
+      }
+    }, 0);
+  };
+
+  return (
+    <div className="phone">
+      {tab==="home" && <Home state={state} stats={stats} cur={cur} night={night} goTree={()=>setTab("tree")} goSettings={()=>setTab("settings")}/>}
+      {tab==="tree" && <TreePage stats={stats} cur={cur} night={night} goForest={()=>setTab("forest")}/>}
+      {tab==="reports" && <Reports state={state} stats={stats} cur={cur}/>}
+      {tab==="forest" && <Forest state={state} stats={stats} cur={cur} night={night}/>}
+      {tab==="settings" && <Settings state={state} stats={stats} cur={cur} dispatch={dispatch} onClose={()=>setTab("home")}/>}
+
+      {tab!=="settings" && (
+        <div className="nav">
+          <button className={tab==="home"?"on":""} onClick={()=>setTab("home")}><span className="ic">🏡</span>Home</button>
+          <button className={tab==="tree"?"on":""} onClick={()=>setTab("tree")}><span className="ic">🌱</span>Tree</button>
+          <button className="addbtn" onClick={()=>setShowAdd(true)} aria-label="Add expense">+
+          </button>
+          <button className={tab==="reports"?"on":""} onClick={()=>setTab("reports")}><span className="ic">📊</span>Reports</button>
+          <button className={tab==="forest"?"on":""} onClick={()=>setTab("forest")}><span className="ic">🌲</span>Forest</button>
+        </div>
+      )}
+
+      {showAdd && <AddSheet state={state} cur={cur} onClose={()=>setShowAdd(false)} onSave={handleSave}/>}
+      {reward && <RewardOverlay cur={cur} amount={reward.amount} recovered={reward.recovered} kind={reward.kind} onDone={()=>setReward(null)}/>}
+      <Toasts items={toasts} onExpire={()=>setToasts([])}/>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("app-root")).render(<App/>);
+</script>

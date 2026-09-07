@@ -257,36 +257,41 @@ button { font-family: inherit; cursor: pointer; }
 @keyframes fade { from { opacity: 0; } }
 .sheet {
   width: 100%; background: var(--frame); border-radius: 28px 28px 0 0;
-  padding: 10px 16px calc(18px + env(safe-area-inset-bottom));
+  padding: 10px 16px calc(14px + env(safe-area-inset-bottom));
   box-shadow: 0 -14px 40px -12px rgba(0,0,0,.4); animation: rise .28s cubic-bezier(.2,.9,.2,1);
-  max-height: 96%; display: flex; flex-direction: column;
+  max-height: 94%; display: flex; flex-direction: column; overflow: hidden;
 }
+.sheet-scroll { flex: 1 1 auto; min-height: 0; overflow-y: auto; overflow-x: hidden; }
+.sheet-scroll::-webkit-scrollbar { width: 0; }
+.sheet-foot { flex: none; padding-top: 8px; }
+.sheet-foot::before { content: ""; display: block; height: 8px; margin-top: -8px;
+  background: linear-gradient(to top, var(--frame), transparent); }
 @keyframes rise { from { transform: translateY(100%); } }
 .grabber { width: 42px; height: 5px; border-radius: 9px; background: var(--line); margin: 4px auto 8px; }
 .amount-display {
-  text-align: center; padding: 6px 0 2px;
+  text-align: center; padding: 2px 0 0;
 }
 .amount-display .q { font-size: 13px; font-weight: 800; color: var(--ink-soft); letter-spacing: .04em; }
 .amount-display .val {
-  font-size: 56px; font-weight: 600; line-height: 1.05; letter-spacing: .5px;
+  font-size: 48px; font-weight: 600; line-height: 1.1; letter-spacing: .5px;
   display: inline-flex; align-items: baseline; gap: 3px;
 }
 .amount-display .cur { font-size: 26px; color: var(--ink-soft); }
 .amount-display .val.empty { color: var(--ink-soft); opacity: .45; }
-.catgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 9px; margin: 12px 0 4px; }
+.catgrid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 8px 0 2px; }
 .cat {
   border: 1.5px solid var(--line); background: var(--surface); border-radius: 18px;
-  padding: 11px 6px; display: flex; flex-direction: column; align-items: center; gap: 4px;
+  padding: 9px 6px; display: flex; flex-direction: column; align-items: center; gap: 3px;
   font-weight: 800; font-size: 12.5px; color: var(--ink); transition: transform .12s, border-color .2s, background .2s;
 }
 .cat .ce { font-size: 23px; }
 .cat:active { transform: scale(.94); }
 .cat.sel { border-color: var(--leaf); background: color-mix(in srgb, var(--leaf) 14%, var(--surface)); }
 .recent-lbl { font-size: 11px; font-weight: 800; color: var(--ink-soft); letter-spacing: .1em; text-transform: uppercase; margin: 2px 0; }
-.keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 8px; }
+.keypad { display: grid; grid-template-columns: repeat(3, 1fr); gap: 7px; margin-top: 6px; }
 .key {
-  border: 0; background: var(--surface); border-radius: 16px; padding: 15px 0;
-  font-size: 23px; font-weight: 700; color: var(--ink); box-shadow: var(--shadow-soft);
+  border: 0; background: var(--surface); border-radius: 16px; padding: 12px 0;
+  font-size: 22px; font-weight: 700; color: var(--ink); box-shadow: var(--shadow-soft);
   transition: transform .1s, background .15s;
 }
 .key:active { transform: scale(.93); background: var(--surface-2); }
@@ -324,6 +329,8 @@ button { font-family: inherit; cursor: pointer; }
   100% { transform: translate(calc(var(--dx)*1.5), calc(var(--dy)*1.5 - 20px)) scale(.3); opacity: 0; }
 }
 .reward-emoji { font-size: 72px; filter: drop-shadow(0 6px 10px rgba(0,0,0,.25)); animation: bounceIn .6s cubic-bezier(.2,1.5,.4,1); }
+/* capture: keep sparkles suspended mid-flight so a still frame shows them */
+html[data-cap="reward"] .spark { animation: sparkle 6s ease-in-out infinite !important; }
 @keyframes bounceIn { 0% { transform: scale(0) rotate(-20deg); } 60% { transform: scale(1.2) rotate(6deg); } 100% { transform: scale(1); } }
 
 /* toast */
@@ -1138,8 +1145,8 @@ function TreePage({ stats, cur, night, goForest }) {
   );
 }
 
-function Reports({ state, stats, cur }) {
-  const [tab, setTab] = useState("week");
+function Reports({ state, stats, cur, initTab }) {
+  const [tab, setTab] = useState(initTab || "week");
   return (
     <div className="screen fade-in">
       <div className="topbar"><div className="brand"><div className="logo">📊</div><h1 className="serif">Reports</h1></div></div>
@@ -1441,14 +1448,14 @@ function Settings({ state, stats, cur, dispatch, onClose }) {
 /* =====================================================================
    MODULE: Add sheet  (target: under 5 seconds)
    ===================================================================== */
-function AddSheet({ state, cur, onClose, onSave }) {
+function AddSheet({ state, cur, onClose, onSave, capMode, capAmount, capCat }) {
   const recentCat = useMemo(() => {
     const last = [...state.expenses].filter(e=>typeOf(e)==="expense").sort((a,b)=>b.ts-a.ts)[0];
     return last ? last.category : "food";
   }, [state.expenses]);
-  const [mode, setMode] = useState("expense");      // "expense" | "income"
-  const [amount, setAmount] = useState("");
-  const [category, setCategory] = useState(recentCat);
+  const [mode, setMode] = useState(capMode || "expense");      // "expense" | "income"
+  const [amount, setAmount] = useState(capAmount || "");
+  const [category, setCategory] = useState(capCat || (capMode === "income" ? "salary" : recentCat));
   const [showNote, setShowNote] = useState(false);
   const [note, setNote] = useState("");
   const cats = mode === "income" ? INCOME_CATS : CATEGORIES;
@@ -1471,6 +1478,7 @@ function AddSheet({ state, cur, onClose, onSave }) {
     <div className="sheet-scrim" onClick={onClose}>
       <div className="sheet" onClick={e=>e.stopPropagation()}>
         <div className="grabber"/>
+        <div className="sheet-scroll">
         <div className="seg" style={{marginBottom:6}}>
           <button className={mode==="expense"?"on":""} onClick={()=>switchMode("expense")}>💸 Spent</button>
           <button className={mode==="income"?"on":""} onClick={()=>switchMode("income")}>💼 Earned</button>
@@ -1496,7 +1504,10 @@ function AddSheet({ state, cur, onClose, onSave }) {
           {["1","2","3","4","5","6","7","8","9",".","0"].map(k => <button key={k} className="key" onClick={()=>pushDigit(k)}>{k}</button>)}
           <button className="key" onClick={back} aria-label="Delete">⌫</button>
         </div>
+        </div>
+        <div className="sheet-foot">
         <button className="save-btn" disabled={!canSave} onClick={doSave}>Save {canSave?money(cur,value):""} ✨</button>
+        </div>
       </div>
     </div>
   );
@@ -1509,8 +1520,8 @@ const GROW_LINES = [
   "Your tree grew a little! 🌱","A new leaf unfurled 🍃","A tiny bud opened 🌸",
   "Sunlight touched your tree ☀️","Your forest feels happier 🌿","A leaf shimmered ✨",
 ];
-function RewardOverlay({ cur, amount, recovered, kind, onDone }) {
-  useEffect(() => { const t = setTimeout(onDone, 1700); return () => clearTimeout(t); }, []);
+function RewardOverlay({ cur, amount, recovered, kind, hold, onDone }) {
+  useEffect(() => { if (hold) return; const t = setTimeout(onDone, 1700); return () => clearTimeout(t); }, []);
   const income = kind === "income";
   const sparks = income ? ["🌰","✨","💰","🍃","🌟","✨"] : ["✨","🍃","🌟","💫","🌱","✨"];
   const emoji = income ? "🌰" : (recovered ? "💧" : "🌱");
@@ -1584,14 +1595,35 @@ async function enableBackgroundNudge() {
 /* =====================================================================
    MODULE: App root
    ===================================================================== */
+// Capture mode (?cap=scene) — used only to shoot clean frames for the demo video.
+const CAP = new URLSearchParams(location.search).get("cap");
+if (CAP) document.documentElement.setAttribute("data-cap", CAP);
+const CAP_TAB = { home:"home", add:"home", "add-earned":"home", reward:"home",
+  tree:"tree", "tree-ach":"tree", forest:"forest", "report-week":"reports",
+  "report-month":"reports", settings:"settings", "settings-notif":"settings" };
+
 function App() {
   const [state, dispatch] = useReducer(reducer, undefined, loadState);
-  const [tab, setTab] = useState("home");
-  const [showAdd, setShowAdd] = useState(false);
-  const [reward, setReward] = useState(null);
+  const [tab, setTab] = useState(CAP ? (CAP_TAB[CAP] || "home") : "home");
+  const [showAdd, setShowAdd] = useState(CAP === "add" || CAP === "add-earned");
+  const [reward, setReward] = useState(CAP === "reward" ? { amount: 6.5, recovered: false, kind: "expense", hold: true } : null);
   const [toasts, setToasts] = useState([]);
   const prevUnlocked = useRef(null);
   const firedRef = useRef({});
+
+  // in capture mode, jump scroll position for scenes that need it
+  useEffect(() => {
+    if (!CAP) return;
+    const sc = () => document.querySelector(".scroll");
+    const t = setTimeout(() => {
+      if (CAP === "tree-ach") { const el = sc(); if (el) el.scrollTop = el.scrollHeight; }
+      if (CAP === "settings-notif") {
+        const label = [...document.querySelectorAll(".section-title")].find(n => n.textContent.includes("Gentle reminders"));
+        if (label) label.scrollIntoView({ block: "start" });
+      }
+    }, 300);
+    return () => clearTimeout(t);
+  }, []);
 
   useEffect(() => saveState(state), [state]);
 
@@ -1647,7 +1679,7 @@ function App() {
     <div className="phone">
       {tab==="home" && <Home state={state} stats={stats} cur={cur} night={night} goTree={()=>setTab("tree")} goSettings={()=>setTab("settings")}/>}
       {tab==="tree" && <TreePage stats={stats} cur={cur} night={night} goForest={()=>setTab("forest")}/>}
-      {tab==="reports" && <Reports state={state} stats={stats} cur={cur}/>}
+      {tab==="reports" && <Reports state={state} stats={stats} cur={cur} initTab={CAP==="report-month"?"month":undefined}/>}
       {tab==="forest" && <Forest state={state} stats={stats} cur={cur} night={night}/>}
       {tab==="settings" && <Settings state={state} stats={stats} cur={cur} dispatch={dispatch} onClose={()=>setTab("home")}/>}
 
@@ -1662,8 +1694,11 @@ function App() {
         </div>
       )}
 
-      {showAdd && <AddSheet state={state} cur={cur} onClose={()=>setShowAdd(false)} onSave={handleSave}/>}
-      {reward && <RewardOverlay cur={cur} amount={reward.amount} recovered={reward.recovered} kind={reward.kind} onDone={()=>setReward(null)}/>}
+      {showAdd && <AddSheet state={state} cur={cur} onClose={()=>setShowAdd(false)} onSave={handleSave}
+        capMode={CAP==="add-earned"?"income":undefined}
+        capAmount={CAP==="add"?"6.50":CAP==="add-earned"?"1200":undefined}
+        capCat={CAP==="add"?"food":CAP==="add-earned"?"salary":undefined}/>}
+      {reward && <RewardOverlay cur={cur} amount={reward.amount} recovered={reward.recovered} kind={reward.kind} hold={reward.hold} onDone={()=>setReward(null)}/>}
       <Toasts items={toasts} onExpire={()=>setToasts([])}/>
     </div>
   );

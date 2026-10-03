@@ -7,7 +7,7 @@
 <link rel="apple-touch-icon" href="icon.svg" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800&family=Patrick+Hand&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@600;700;800&family=Baloo+2:wght@600;800&display=swap" rel="stylesheet" />
 
 <style>
 /* ============================ TOKENS ============================ */
@@ -433,6 +433,62 @@ html[data-cap="reward"] .spark { animation: sparkle 6s ease-in-out infinite !imp
 @keyframes fadeUp { from { opacity: 0; transform: translateY(8px); } }
 .hint { font-size: 12px; color: var(--ink-soft); line-height: 1.5; }
 .spacer-8 { height: 8px; } .spacer-14 { height: 14px; } .spacer-20 { height: 20px; }
+
+/* ===== v4: cozy Animal-Crossing / Pixar polish ===== */
+body{font-family:"Nunito","Baloo 2",system-ui,sans-serif}
+.serif,h1,.money-big,.section-title,.eyebrow,.val{font-family:"Fredoka","Baloo 2",sans-serif}
+.phone{background:radial-gradient(circle at 13px 13px,color-mix(in srgb,var(--leaf) 16%,transparent) 3px,transparent 3.6px) 0 0/26px 26px,var(--frame)}
+.scroll{padding-bottom:calc(116px + env(safe-area-inset-bottom))}
+.card{border:3px solid var(--line);border-radius:28px;box-shadow:0 5px 0 var(--line),var(--shadow-soft)}
+.scene{border:5px solid var(--surface);border-radius:34px;box-shadow:0 6px 0 var(--line),var(--shadow)}
+.brand .logo{border-radius:50%;border:3px solid var(--surface);box-shadow:0 3px 0 var(--leaf-deep)}
+.iconbtn{border:3px solid var(--line);border-radius:50%;box-shadow:0 3px 0 var(--line)}
+.iconbtn:disabled{opacity:.3}.iconbtn.sm{width:34px;height:34px;font-size:20px;flex:none}
+.chip{border:2px solid var(--line);background:var(--surface);box-shadow:0 2px 0 var(--line)}
+.bar{height:18px;border:3px solid var(--line)}
+.bar>i{position:relative;box-shadow:inset 0 -4px 0 rgba(0,0,0,.08)}
+.bar>i::after{content:"";position:absolute;inset:0;border-radius:20px;background-image:repeating-linear-gradient(-45deg,rgba(255,255,255,.3) 0 8px,transparent 8px 16px)}
+.row .emoji{border-radius:50%;border:2px solid var(--line);background:var(--surface)}
+.row.tap{cursor:pointer;border-radius:16px}.row.tap:active{background:var(--surface-2)}
+.nav{left:12px;right:12px;bottom:calc(10px + env(safe-area-inset-bottom));padding:6px 8px;background:var(--surface);border:3px solid var(--line);border-radius:36px;box-shadow:0 5px 0 var(--line),var(--shadow)}
+.nav .addbtn{border-radius:50%;margin-top:-28px;width:64px;height:64px;border:4px solid var(--surface);box-shadow:0 5px 0 var(--leaf-deep),0 10px 18px -6px rgba(0,0,0,.3);animation:wiggle 5s ease-in-out infinite}
+@keyframes wiggle{0%,88%,100%{transform:rotate(0)}92%{transform:rotate(-8deg)}96%{transform:rotate(8deg)}}
+.nav button.on .ic{filter:drop-shadow(0 2px 0 rgba(0,0,0,.12))}
+.sheet{border-radius:36px 36px 0 0;border:3px solid var(--line);border-bottom:0}
+.seg{border:3px solid var(--line);border-radius:999px}.seg button{border-radius:999px}
+.cat{border-width:3px;border-radius:24px;box-shadow:0 3px 0 var(--line)}
+.cat.sel{box-shadow:0 3px 0 var(--leaf)}
+.key{border:2px solid var(--line);border-radius:20px;box-shadow:0 4px 0 var(--line)}
+.key:active{transform:translateY(3px);box-shadow:0 1px 0 var(--line)}
+.key.op{background:color-mix(in srgb,var(--sun) 38%,var(--surface))}
+.key.eq{background:var(--leaf);color:#fff;border-color:var(--leaf-deep);box-shadow:0 4px 0 var(--leaf-deep)}
+.save-btn{border-radius:999px;box-shadow:0 6px 0 var(--leaf-deep),0 12px 20px -8px rgba(0,0,0,.3)}
+.save-btn:not(:disabled):active{transform:translateY(4px);box-shadow:0 2px 0 var(--leaf-deep)}
+.ghost-btn{border-width:3px;border-radius:999px;box-shadow:0 3px 0 var(--line)}
+.insight{border:3px solid var(--line);border-radius:26px}
+.forest-tile{border-width:3px;border-radius:26px;box-shadow:0 4px 0 var(--line)}
+.forest-tile .mini{border-radius:20px}
+.daterow{display:flex;align-items:center;justify-content:center;gap:8px;margin:0 0 4px}
+.datepill{position:relative;display:inline-flex;gap:6px;align-items:center;padding:6px 14px;border-radius:999px;border:2px solid var(--line);background:var(--surface);font-weight:800;font-size:14px;box-shadow:0 2px 0 var(--line)}
+.datepill em{font-style:normal;font-size:10px;background:var(--bloom-soft);padding:2px 8px;border-radius:99px}
+.datepill input{position:absolute;inset:0;opacity:0;width:100%;height:100%}
+.amount-display{position:relative}
+.calc-toggle{position:absolute;right:0;top:6px;width:42px;height:42px;border-radius:50%;border:3px solid var(--line);background:var(--surface);font-size:19px;box-shadow:0 3px 0 var(--line)}
+.calc-toggle.on{background:var(--sun-soft);border-color:var(--sun)}
+.expr{font-size:15px;color:var(--ink-soft);font-weight:800;min-height:20px}
+.calc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-top:6px}
+.calc-grid .key{padding:10px 0;font-size:20px}
+.dayhead{display:flex;align-items:center;justify-content:space-between;margin:16px 6px 6px}
+.dayhead b{font-family:"Fredoka",sans-serif;font-size:15px}.dayhead span{font-size:12.5px;font-weight:800;color:var(--ink-soft)}
+.cycnav{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:2px 0 12px}
+.cycnav .mid{text-align:center}.cycnav .mid b{display:block;font-family:"Fredoka",sans-serif;font-size:19px}.cycnav .mid span{font-size:12px;font-weight:800;color:var(--ink-soft)}
+.cloud{animation:cloudy 22s ease-in-out infinite}@keyframes cloudy{50%{transform:translateX(18px)}}
+.twinkle{animation:glow 3s ease-in-out infinite}
+@media (prefers-reduced-motion: reduce){.cloud,.twinkle,.addbtn{animation:none!important}}
+.eye{animation:blink 5.5s infinite;transform-box:fill-box;transform-origin:center}
+@keyframes blink{0%,93%,100%{transform:scaleY(1)}96%{transform:scaleY(.08)}}
+.ear-wig{animation:earw 6s ease-in-out infinite}@keyframes earw{0%,80%,100%{transform:rotate(0)}86%{transform:rotate(-5deg)}92%{transform:rotate(4deg)}}
+@media (prefers-reduced-motion: reduce){.eye,.ear-wig{animation:none!important}}
 </style>
 
 <div id="app-root"></div>
@@ -703,9 +759,12 @@ function emptyState() {
 function reducer(state, action) {
   switch (action.type) {
     case "ADD": {
-      const e = { id: "e"+now()+Math.random().toString(36).slice(2,6), amount: action.amount, category: action.category, note: action.note||"", ts: now(), type: action.kind||"expense" };
+      const e = { id: "e"+now()+Math.random().toString(36).slice(2,6), amount: action.amount, category: action.category, note: action.note||"", ts: action.ts||now(), type: action.kind||"expense" };
       return { ...state, expenses: [...state.expenses, e] };
     }
+    case "UPDATE": return { ...state, expenses: state.expenses.map(e => e.id===action.id ? { ...e, ...action.patch } : e) };
+    case "DELETE": return { ...state, expenses: state.expenses.filter(e => e.id!==action.id) };
+    case "SET_SCENE": return { ...state, prefs: { ...state.prefs, sceneTime: action.v } };
     case "SEEN_ACH":
       return { ...state, meta: { ...state.meta, seenAch: Array.from(new Set([...state.meta.seenAch, ...action.ids])) } };
     case "SET_BUDGET": {
@@ -740,11 +799,28 @@ const TYPE_STYLE = {
   magical: { leaf:"#8fb4d6", leaf2:"#6f93c4", bark:"#7a6ba0", bloom:"#cbb0ec", glow:true },
 };
 
+function Eye({ x, y, r = 2.4 }) {
+  return (<g transform={`translate(${x},${y})`}><g className="eye">
+    <circle r={r} fill="#2a1e14"/><circle cx={r*.34} cy={-r*.36} r={r*.4} fill="#fff"/><circle cx={-r*.3} cy={r*.35} r={r*.17} fill="#fff" opacity=".8"/>
+  </g></g>);
+}
+const Cheek = ({ x, y, r = 2.2 }) => <circle cx={x} cy={y} r={r} fill="#ff8fa3" opacity=".55"/>;
+function Spikes({ cx, cy, rx, ry, fill, fill2 }) {
+  const out = [];
+  for (let i = 0; i <= 10; i++) {
+    const a = Math.PI * (1 + i / 10 * .95) + .02, b = a + .26;
+    const p1 = [cx + rx * Math.cos(a), cy + ry * Math.sin(a)], p2 = [cx + rx * Math.cos(b), cy + ry * Math.sin(b)];
+    const m = (a + b) / 2, t = [cx + rx * 1.34 * Math.cos(m), cy + ry * 1.38 * Math.sin(m)];
+    out.push(<path key={i} d={`M${p1[0]} ${p1[1]} L${t[0]} ${t[1]} L${p2[0]} ${p2[1]}Z`} fill={i % 2 ? fill2 : fill}/>);
+  }
+  return <g>{out}</g>;
+}
+
 function Blob({ cx, cy, r, fill }) {
   return <circle cx={cx} cy={cy} r={r} fill={fill} />;
 }
 
-function TreeScene({ stats, treeType, unlocked, night, mini, acornCount = 3 }) {
+function TreeScene({ stats, treeType, unlocked, night, tod, mini, acornCount = 3 }) {
   const st = TYPE_STYLE[treeType] || TYPE_STYLE.oak;
   const stage = stats.stage;
   const health = stats.health;
@@ -812,6 +888,7 @@ function TreeScene({ stats, treeType, unlocked, night, mini, acornCount = 3 }) {
       if (st.weep) {
         for (let i=-2;i<=2;i++){ canopy.push(<path key={"w"+i} d={`M${150+i*20} ${cCy+R*0.5} q4 30 -2 ${44*scale}`} stroke={st.leaf} strokeWidth="4" fill="none" strokeLinecap="round" opacity=".85"/>); }
       }
+      for (let i=0;i<shown;i++){ const [x,y,r]=blobs[i]; canopy.push(<circle key={"hl"+i} cx={x-r*0.3} cy={y-r*0.45} r={r*0.38} fill="#fff" opacity=".09"/>); }
       // blossoms / fruit / flowers on the tree at mature stages
       if (stage>=5 && st.bloom) {
         const spots = [[128,cCy-8],[168,cCy-14],[150,cCy-30],[138,cCy+14],[172,cCy+6],[118,cCy+8]];
@@ -883,67 +960,129 @@ function TreeScene({ stats, treeType, unlocked, night, mini, acornCount = 3 }) {
     deco.push(<g key="pond"><ellipse cx="212" cy="264" rx="30" ry="9" fill={night?"#3a5a72":"#8fc7d6"} opacity=".85"/><ellipse cx="205" cy="262" rx="8" ry="2.5" fill="#fff" opacity=".5"/></g>);
   }
 
-  // ---- ANIMALS (subtle life) ----
+  // ---- ANIMALS: round, big-eyed, blushing little friends ----
   const animals = [];
+  const shadow = (rx = 10) => <ellipse cx="0" cy="1" rx={rx} ry="2.6" fill="rgba(0,0,0,.14)"/>;
   if (has("squirrel")) {
-    animals.push(<g key="sq" transform="translate(118,236)">
-      <ellipse cx="0" cy="6" rx="7" ry="9" fill="#c67a44"/>
-      <circle cx="0" cy="-3" r="5" fill="#c67a44"/>
-      <circle cx="-1.5" cy="-4" r="1.2" fill="#3a2a1a"/>
-      <path d="M-2 -7 q-2 -3 0 -5" stroke="#c67a44" strokeWidth="2.5" strokeLinecap="round"/>
-      <g className="tail-twitch"><path d="M6 10 q16 -2 10 -22 q-2 -8 -8 -6 q8 4 4 16 q-3 8 -6 12Z" fill="#a9642f"/></g>
+    animals.push(<g key="sq" transform="translate(122,250) scale(1.05)">
+      {shadow(11)}
+      <g className="tail-twitch" style={{transformBox:"fill-box",transformOrigin:"bottom center"}}>
+        <path d="M-5 -2 C-27 0 -32 -24 -19 -38 C-11 -45 -5 -35 -11 -27 C-16 -19 -10 -12 -3 -10Z" fill="#d98a4e"/>
+        <path d="M-8 -6 C-22 -5 -25 -20 -17 -31" stroke="#f6c08c" strokeWidth="3" fill="none" strokeLinecap="round"/>
+      </g>
+      <ellipse cx="0" cy="-10" rx="9" ry="10" fill="#d98a4e"/><ellipse cx="1.5" cy="-8" rx="5.2" ry="7" fill="#fde7cb"/>
+      <ellipse cx="-5" cy="-1" rx="3.6" ry="2.3" fill="#c97b3f"/><ellipse cx="5" cy="-1" rx="3.6" ry="2.3" fill="#c97b3f"/>
+      <circle cx="-6.5" cy="-27" r="3.6" fill="#d98a4e"/><circle cx="6.5" cy="-27" r="3.6" fill="#d98a4e"/>
+      <circle cx="-6.5" cy="-27" r="1.8" fill="#ffb8b0"/><circle cx="6.5" cy="-27" r="1.8" fill="#ffb8b0"/>
+      <circle cx="0" cy="-21" r="9.5" fill="#e69a5d"/><ellipse cx="0" cy="-17.5" rx="5.5" ry="4" fill="#fde7cb"/>
+      <Eye x={-3.8} y={-22} r={2.5}/><Eye x={3.8} y={-22} r={2.5}/>
+      <ellipse cx="0" cy="-18.6" rx="1.5" ry="1.1" fill="#5a3a28"/>
+      <path d="M-2 -16.2 q2 1.8 4 0" stroke="#5a3a28" strokeWidth="1" fill="none" strokeLinecap="round"/>
+      <rect x="-1.1" y="-16" width="2.2" height="2.6" rx=".8" fill="#fff"/>
+      <Cheek x={-7.2} y={-18.2}/><Cheek x={7.2} y={-18.2}/>
+      <g transform="translate(0,-6)"><ellipse cx="0" cy="1" rx="3.6" ry="4.3" fill="#c98a4e"/><path d="M-4.3 -1 Q0 -6.5 4.3 -1Z" fill="#7c5535"/><circle cx="0" cy="-5.5" r=".9" fill="#7c5535"/></g>
     </g>);
   }
   if (has("hedgehog") && !mini) {
-    animals.push(<g key="hh" className="walk"><g transform="translate(60,254)">
-      <ellipse cx="0" cy="0" rx="13" ry="9" fill="#8a6b4e"/>
-      {[-8,-4,0,4,8].map(x=><path key={x} d={`M${x} -6 l0 -6`} stroke="#5f4632" strokeWidth="2" strokeLinecap="round"/>)}
-      <circle cx="12" cy="1" r="4.5" fill="#c8a882"/><circle cx="15" cy="0" r="1.3" fill="#2a1e14"/>
+    animals.push(<g key="hh" className="walk"><g transform="translate(40,270) scale(1.05)">
+      {shadow(15)}
+      <Spikes cx={-2} cy={-9} rx={13} ry={9.5} fill="#5f4632" fill2="#7d5d42"/>
+      <ellipse cx="-2" cy="-9" rx="13" ry="9.5" fill="#8b6a4c"/>
+      <ellipse cx="-4" cy="-13" rx="6" ry="3" fill="#a88561" opacity=".6"/>
+      <ellipse cx="-6" cy="0" rx="3.6" ry="2.3" fill="#f6d9b4"/><ellipse cx="5" cy="0" rx="3.6" ry="2.3" fill="#f6d9b4"/>
+      <circle cx="6" cy="-14" r="2.8" fill="#f6d9b4"/><circle cx="6" cy="-14" r="1.4" fill="#ffb8b0"/>
+      <ellipse cx="11" cy="-6.5" rx="7.8" ry="6.8" fill="#f6d9b4"/>
+      <Eye x={11} y={-9} r={2.5}/>
+      <circle cx="17.2" cy="-5.4" r="2" fill="#2a1e14"/><circle cx="17.7" cy="-6" r=".7" fill="#fff"/>
+      <path d="M12 -2.4 q2 1.6 4 0" stroke="#8a5a3a" strokeWidth="1" fill="none" strokeLinecap="round"/>
+      <Cheek x={8.4} y={-4} r={2}/>
     </g></g>);
   }
   if (has("rabbit")) {
-    animals.push(<g key="rb" className="hop"><g transform="translate(214,250)">
-      <ellipse cx="0" cy="4" rx="9" ry="7" fill="#e6ddca"/>
-      <circle cx="-6" cy="-2" r="5" fill="#e6ddca"/>
-      <ellipse cx="-8" cy="-11" rx="2" ry="7" fill="#e6ddca"/><ellipse cx="-4" cy="-11" rx="2" ry="7" fill="#e6ddca"/>
-      <circle cx="-8" cy="-3" r="1" fill="#3a2a1a"/><circle cx="7" cy="4" r="2.5" fill="#fff"/>
+    animals.push(<g key="rb" className="hop"><g transform="translate(228,258) scale(1.05)">
+      {shadow(11)}
+      <circle cx="10" cy="-6" r="4.2" fill="#fff" stroke="#e8dcc4" strokeWidth=".8"/>
+      <ellipse cx="0" cy="-8" rx="10" ry="9" fill="#fbf3e6" stroke="#e8dcc4" strokeWidth=".8"/><ellipse cx="-.5" cy="-6" rx="5.5" ry="6" fill="#fff"/>
+      <g className="ear-wig" style={{transformBox:"fill-box",transformOrigin:"bottom center"}}>
+        <g transform="rotate(-10 -4.5 -24)"><ellipse cx="-4.5" cy="-33" rx="3.2" ry="10" fill="#fbf3e6" stroke="#e8dcc4" strokeWidth=".8"/><ellipse cx="-4.5" cy="-32" rx="1.6" ry="6.6" fill="#ffc2cf"/></g>
+        <g transform="rotate(12 4.5 -24)"><ellipse cx="4.5" cy="-33" rx="3.2" ry="10" fill="#fbf3e6" stroke="#e8dcc4" strokeWidth=".8"/><ellipse cx="4.5" cy="-32" rx="1.6" ry="6.6" fill="#ffc2cf"/></g>
+      </g>
+      <circle cx="0" cy="-23" r="9.8" fill="#fbf3e6" stroke="#e8dcc4" strokeWidth=".8"/>
+      <Eye x={-4} y={-24} r={2.6}/><Eye x={4} y={-24} r={2.6}/>
+      <ellipse cx="0" cy="-20" rx="1.7" ry="1.2" fill="#ff8fa3"/>
+      <path d="M-2.4 -18 q2.4 2.2 2.4 0 q0 2.2 2.4 0" stroke="#9a7a6a" strokeWidth=".9" fill="none" strokeLinecap="round"/>
+      <Cheek x={-7.4} y={-20.2} r={2.4}/><Cheek x={7.4} y={-20.2} r={2.4}/>
+      <ellipse cx="-5" cy="-0.5" rx="4" ry="2.4" fill="#f4eadb"/><ellipse cx="5" cy="-0.5" rx="4" ry="2.4" fill="#f4eadb"/>
     </g></g>);
   }
   if (has("fox") && !mini) {
-    animals.push(<g key="fx" transform="translate(196,248)">
-      <ellipse cx="0" cy="4" rx="12" ry="7" fill="#e08a4a"/>
-      <path d="M10 4 q14 0 18 8 q-10 2 -18 -2Z" fill="#e08a4a"/>
-      <path d="M24 12 q6 -2 8 2" stroke="#fff" strokeWidth="3" fill="none" strokeLinecap="round"/>
-      <circle cx="-8" cy="0" r="5" fill="#e08a4a"/><path d="M-12 -4 l-2 -6 l5 3Z" fill="#e08a4a"/><path d="M-6 -4 l2 -6 l-5 3Z" fill="#e08a4a"/>
-      <circle cx="-10" cy="0" r="1" fill="#2a1e14"/>
+    animals.push(<g key="fx" transform="translate(266,262) scale(1.05)">
+      {shadow(13)}
+      <g className="tail-twitch" style={{transformBox:"fill-box",transformOrigin:"left bottom"}}>
+        <path d="M7 -3 C26 0 36 -14 30 -28 C23 -22 20 -14 12 -12Z" fill="#ee8d44"/>
+        <path d="M30 -28 C34 -20 32 -12 26 -8 C23 -14 25 -22 30 -28Z" fill="#fff4e2"/>
+      </g>
+      <ellipse cx="0" cy="-11" rx="10" ry="11" fill="#ee8d44"/><ellipse cx="0" cy="-8" rx="5.6" ry="8" fill="#fff4e2"/>
+      <ellipse cx="-5" cy="-1" rx="3.8" ry="2.4" fill="#5a3a2a"/><ellipse cx="5" cy="-1" rx="3.8" ry="2.4" fill="#5a3a2a"/>
+      <path d="M-10.5 -27 L-9.5 -42 L-1.5 -31Z" fill="#ee8d44"/><path d="M10.5 -27 L9.5 -42 L1.5 -31Z" fill="#ee8d44"/>
+      <path d="M-8.5 -31 L-8.2 -38 L-4 -32.5Z" fill="#4a2f22"/><path d="M8.5 -31 L8.2 -38 L4 -32.5Z" fill="#4a2f22"/>
+      <ellipse cx="0" cy="-24" rx="11.5" ry="9" fill="#ee8d44"/>
+      <ellipse cx="-7.2" cy="-21" rx="5.2" ry="4.2" fill="#fff4e2"/><ellipse cx="7.2" cy="-21" rx="5.2" ry="4.2" fill="#fff4e2"/><ellipse cx="0" cy="-19.5" rx="4.5" ry="3.6" fill="#fff4e2"/>
+      <Eye x={-4.4} y={-25} r={2.6}/><Eye x={4.4} y={-25} r={2.6}/>
+      <ellipse cx="0" cy="-21.4" rx="2.1" ry="1.5" fill="#2a1e14"/>
+      <path d="M-2.4 -18.8 q2.4 2 2.4 0 q0 2 2.4 0" stroke="#7a4a30" strokeWidth=".9" fill="none" strokeLinecap="round"/>
+      <Cheek x={-8.4} y={-20.4}/><Cheek x={8.4} y={-20.4}/>
     </g>);
   }
   if (has("bird")) {
-    animals.push(<g key="bd" className="bird-bob"><g transform="translate(186,168)">
-      <ellipse cx="0" cy="0" rx="8" ry="6" fill="#e0a34e"/>
-      <circle cx="6" cy="-4" r="4" fill="#e0a34e"/>
-      <path d="M9 -4 l5 1 l-5 2Z" fill="#c9772f"/>
-      <circle cx="7" cy="-5" r="1" fill="#2a1e14"/>
-      <path d="M-6 0 q-8 -4 -10 2 q6 2 10 0Z" fill="#c98a3a"/>
+    animals.push(<g key="bd" className="bird-bob"><g transform="translate(186,168) scale(1.1)">
+      <path d="M-7 1 L-18 5 L-8 6.5Z" fill="#4ea2d8"/>
+      <circle cx="0" cy="0" r="9.5" fill="#7cc8f2"/><ellipse cx="1" cy="3.2" rx="6.3" ry="5.6" fill="#fff"/>
+      <ellipse cx="-4.5" cy="1.5" rx="5.2" ry="3.6" fill="#58b0e2" transform="rotate(-20 -4.5 1.5)"/>
+      <path d="M-1 -9 q-2 -6 3.5 -5.5 q-2 2 -.5 5Z" fill="#58b0e2"/>
+      <path d="M8.2 -1 l5.4 1.8 l-5.4 1.8Z" fill="#ffb347"/>
+      <Eye x={4.2} y={-2.6} r={2.4}/><Cheek x={5.8} y={1.4} r={1.9}/>
+      <path d="M-2 9 v3.5 M2 9 v3.5" stroke="#ffb347" strokeWidth="1.3" strokeLinecap="round"/>
     </g></g>);
   }
   if (has("frog")) {
-    animals.push(<g key="fg" transform="translate(190,258)"><ellipse cx="0" cy="2" rx="8" ry="6" fill="#7bb26a"/><circle cx="-4" cy="-4" r="3" fill="#8fc47c"/><circle cx="4" cy="-4" r="3" fill="#8fc47c"/><circle cx="-4" cy="-4" r="1" fill="#123"/><circle cx="4" cy="-4" r="1" fill="#123"/></g>);
+    animals.push(<g key="fg" transform="translate(190,260)">
+      {shadow(9)}
+      <ellipse cx="0" cy="-5" rx="9" ry="7" fill="#86cf6f"/><ellipse cx="0" cy="-3.5" rx="5.5" ry="4.4" fill="#d6f2b6"/>
+      <circle cx="-5" cy="-11" r="4.2" fill="#86cf6f"/><circle cx="5" cy="-11" r="4.2" fill="#86cf6f"/>
+      <circle cx="-5" cy="-11" r="2.7" fill="#fff"/><circle cx="5" cy="-11" r="2.7" fill="#fff"/>
+      <circle cx="-4.6" cy="-10.8" r="1.5" fill="#2a1e14"/><circle cx="5.4" cy="-10.8" r="1.5" fill="#2a1e14"/>
+      <path d="M-3 -6.2 q3 2.2 6 0" stroke="#3e7a38" strokeWidth="1" fill="none" strokeLinecap="round"/>
+      <Cheek x={-7} y={-6.6} r={1.8}/><Cheek x={7} y={-6.6} r={1.8}/>
+    </g>);
   }
 
   // flying things
   const flyers = [];
   if (has("butterfly")) {
-    flyers.push(<g key="bf" className="butterfly" style={{transformBox:"fill-box"}}><g transform="translate(120,150)">
-      <g className="bfly-wing"><ellipse cx="-4" cy="0" rx="5" ry="7" fill="#e68aa0"/><ellipse cx="4" cy="0" rx="5" ry="7" fill="#f0a9bd"/></g>
-      <rect x="-.8" y="-6" width="1.6" height="12" rx="1" fill="#5a4632"/>
+    flyers.push(<g key="bf" className="butterfly" style={{transformBox:"fill-box"}}><g transform="translate(120,150) scale(1.15)">
+      <g className="bfly-wing" style={{transformBox:"fill-box"}}>
+        <ellipse cx="-6.5" cy="-3" rx="6.5" ry="8.5" fill="#ff9ec4" transform="rotate(-25 -6.5 -3)"/>
+        <ellipse cx="6.5" cy="-3" rx="6.5" ry="8.5" fill="#ffb6d3" transform="rotate(25 6.5 -3)"/>
+        <ellipse cx="-4.5" cy="6" rx="4.6" ry="5.4" fill="#c6a6ee" transform="rotate(20 -4.5 6)"/>
+        <ellipse cx="4.5" cy="6" rx="4.6" ry="5.4" fill="#d6bcf4" transform="rotate(-20 4.5 6)"/>
+        <circle cx="-7" cy="-5" r="1.7" fill="#fff" opacity=".85"/><circle cx="7" cy="-5" r="1.7" fill="#fff" opacity=".85"/>
+        <circle cx="-4.5" cy="6" r="1.2" fill="#fff" opacity=".8"/><circle cx="4.5" cy="6" r="1.2" fill="#fff" opacity=".8"/>
+      </g>
+      <rect x="-1.1" y="-7" width="2.2" height="15" rx="1.1" fill="#5a4632"/><circle cx="0" cy="-8" r="2.4" fill="#5a4632"/>
+      <path d="M-1 -10 q-2 -5 -5 -4 M1 -10 q2 -5 5 -4" stroke="#5a4632" strokeWidth=".9" fill="none" strokeLinecap="round"/>
     </g></g>);
   }
   if (has("bee")) {
-    flyers.push(<g key="be" className="bee"><g transform="translate(175,140)">
-      <ellipse cx="0" cy="0" rx="6" ry="4.5" fill="#e8c04e"/>
-      <rect x="-3" y="-4.5" width="2" height="9" fill="#4a3a1a"/><rect x="1" y="-4.5" width="2" height="9" fill="#4a3a1a"/>
-      <ellipse cx="-3" cy="-4" rx="4" ry="2.5" fill="#fff" opacity=".8"/>
+    flyers.push(<g key="be" className="bee"><g transform="translate(175,140) scale(1.2)">
+      <ellipse cx="-3" cy="-8" rx="4.4" ry="3.2" fill="#fff" opacity=".9" stroke="#bfe0f0" strokeWidth=".6" transform="rotate(-20 -3 -8)"/>
+      <ellipse cx="3" cy="-8.5" rx="4.4" ry="3.2" fill="#fff" opacity=".9" stroke="#bfe0f0" strokeWidth=".6" transform="rotate(15 3 -8.5)"/>
+      <path d="M-8 0 l-4 -1.2 l.5 2.6Z" fill="#4a3a1a"/>
+      <ellipse cx="0" cy="0" rx="8" ry="6.4" fill="#ffd54a"/>
+      <path d="M-3.8 -6 q-1.6 6 0 12 M1 -6.3 q-1.6 6.3 0 12.6" stroke="#4a3a1a" strokeWidth="2.4" fill="none" strokeLinecap="round"/>
+      <path d="M5 -5.5 q1 -4 3.4 -4.6 M7 -4 q2.5 -3 5 -2.6" stroke="#4a3a1a" strokeWidth=".9" fill="none" strokeLinecap="round"/>
+      <Eye x={5} y={-1} r={1.9}/><Cheek x={6.4} y={2.2} r={1.6}/>
+      <path d="M3.6 2.4 q1.2 1.2 2.4 0" stroke="#4a3a1a" strokeWidth=".8" fill="none" strokeLinecap="round"/>
     </g></g>);
   }
 
@@ -955,26 +1094,63 @@ function TreeScene({ stats, treeType, unlocked, night, mini, acornCount = 3 }) {
     });
   }
 
-  // stars at night
-  const stars = [];
-  if (night) {
-    [[40,40],[90,26],[210,34],[260,60],[300,30],[150,20],[330,90],[30,90]].forEach(([x,y],i)=>
-      stars.push(<circle key={"s"+i} cx={x} cy={y} r={i%3?1:1.6} fill="#fff" opacity=".8"/>));
-  }
+  const T = tod || TOD_DAY;
+  const uid = React.useId().replace(/:/g, "");
+  const cloud = (x, y, k, sc, d) => (
+    <g key={"c"+k} transform={`translate(${x},${y}) scale(${sc})`} opacity={T.night ? .3 : .95}>
+      <g className="cloud" style={{animationDelay: d+"s"}}>
+        <ellipse cx="0" cy="8" rx="26" ry="10" fill="#fff"/><circle cx="-10" cy="2" r="11" fill="#fff"/>
+        <circle cx="6" cy="-3" r="14" fill="#fff"/><circle cx="20" cy="4" r="9" fill="#fff"/>
+        <ellipse cx="2" cy="13" rx="22" ry="3.5" fill="#bcdcf0" opacity=".55"/>
+      </g></g>);
+  const stars = [[40,40],[90,26],[210,34],[260,60],[290,28],[150,18],[270,100],[30,90],[120,60],[235,15]].map(([x,y],i)=>
+    <circle key={"s"+i} className="twinkle" style={{animationDelay:(i*.37)+"s"}} cx={x} cy={y} r={i%3?1:1.8} fill="#fff"/>);
+  const o = T.orb;
+  const orb = T.sunUp ? (
+    <g transform={`translate(${o.x},${o.y})`}>
+      <circle r="32" fill={`url(#${uid}s)`}/><circle r="14" fill="#ffd95a"/>
+      <circle cx="-5" cy="-1" r="1.6" fill="#7a4a1a"/><circle cx="5" cy="-1" r="1.6" fill="#7a4a1a"/>
+      <path d="M-3.5 3.5 q3.5 3.5 7 0" stroke="#7a4a1a" strokeWidth="1.4" fill="none" strokeLinecap="round"/>
+      <circle cx="-9" cy="3" r="2.6" fill="#ff9a8a" opacity=".7"/><circle cx="9" cy="3" r="2.6" fill="#ff9a8a" opacity=".7"/>
+    </g>) : (
+    <g transform={`translate(${o.x},${o.y})`}>
+      <circle r="26" fill="#fff6c8" opacity=".18"/><circle r="13" fill="#fff3bf"/>
+      <circle cx="5" cy="-6" r="3" fill="#f0e29a"/><circle cx="-6" cy="7" r="2" fill="#f0e29a"/>
+      <path d="M-6 -1 q2.5 2.5 5 0 M2 -1 q2.5 2.5 5 0" stroke="#8a7a4a" strokeWidth="1.3" fill="none" strokeLinecap="round"/>
+      <circle cx="-8" cy="3.5" r="2.2" fill="#ffb0a0" opacity=".6"/><circle cx="8" cy="3.5" r="2.2" fill="#ffb0a0" opacity=".6"/>
+    </g>);
+  const buddy = !mini ? (<g className="hop"><g transform="translate(122,266)">
+    <ellipse cx="0" cy="8" rx="11" ry="3" fill="rgba(0,0,0,.12)"/>
+    <ellipse cx="0" cy="-1" rx="10" ry="10" fill="#c8f08f"/><ellipse cx="-3" cy="-5" rx="4" ry="3" fill="#fff" opacity=".4"/>
+    <path d="M0 -10 q-2 -8 6 -9 q2 6 -6 9Z" fill="#6cc24a"/><path d="M0 -10 q-8 -2 -8 -8 q7 0 8 8Z" fill="#8fd65c"/>
+    <circle cx="-3.5" cy="-2" r="2" fill="#3a2a1a"/><circle cx="3.5" cy="-2" r="2" fill="#3a2a1a"/>
+    <circle cx="-3" cy="-2.7" r=".7" fill="#fff"/><circle cx="4" cy="-2.7" r=".7" fill="#fff"/>
+    <circle cx="-7" cy="1.5" r="2" fill="#ff9ec4" opacity=".85"/><circle cx="7" cy="1.5" r="2" fill="#ff9ec4" opacity=".85"/>
+    <path d="M-2 2 q2 2.2 4 0" stroke="#3a2a1a" strokeWidth="1.1" fill="none" strokeLinecap="round"/>
+  </g></g>) : null;
+  const fence = !mini ? (<g>
+    {[0,1,2,3,4].map(i=><path key={i} d={`M${20+i*13} 262 v-17 q4 -5 8 0 v17Z`} fill="#fff4dc" stroke="#e0c99b" strokeWidth="1.2"/>)}
+    <rect x="20" y="249" width="60" height="3" rx="1.5" fill="#e0c99b"/><rect x="20" y="256" width="60" height="3" rx="1.5" fill="#e0c99b"/>
+  </g>) : null;
+  const tufts = [[40,284],[120,291],[196,285],[262,289]].map(([x,y],i)=>
+    <path key={"tf"+i} d={`M${x} ${y} q2 -9 4 0 q2 -9 4 0 q2 -7 4 0`} stroke={T.g1} strokeWidth="2.4" fill="none" strokeLinecap="round" opacity=".9"/>);
 
   return (
     <svg viewBox="0 0 300 300" role="img" aria-label={`${STAGE_NAMES[stage]}, health ${Math.round(health)}%`}>
       <defs>
-        <linearGradient id="grd" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor={night?"#38536a":"#86d466"}/>
-          <stop offset="1" stopColor={night?"#2b3f38":"#5fb84a"}/>
-        </linearGradient>
+        <linearGradient id={uid+"g"} x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor={T.g1}/><stop offset="1" stopColor={T.g2}/></linearGradient>
+        <radialGradient id={uid+"s"}><stop offset="0" stopColor="#fff3b0" stopOpacity=".9"/><stop offset="1" stopColor="#ffd95a" stopOpacity="0"/></radialGradient>
         <radialGradient id="magic"><stop offset="0" stopColor="#dcc6f5"/><stop offset="1" stopColor="#dcc6f5" stopOpacity="0"/></radialGradient>
       </defs>
-      {stars}
-      {/* ground */}
-      <path d={`M0 ${groundY} Q150 ${groundY-16} 300 ${groundY} L300 300 L0 300 Z`} fill="url(#grd)"/>
-      <ellipse cx="150" cy="256" rx="70" ry="12" fill="rgba(0,0,0,.08)"/>
+      <g opacity={T.stars}>{stars}</g>
+      {orb}
+      {cloud(70,70,0,1,0)}{!mini && cloud(230,48,1,.8,-8)}{!mini && cloud(160,104,2,.6,-14)}
+      <path d="M0 214 Q55 176 120 206 T250 192 T300 204 V300H0Z" fill={T.hillFar}/>
+      {[[38,196],[58,201],[236,190],[262,194]].map(([x,y],i)=><g key={"bt"+i}><rect x={x-1.5} y={y} width="3" height="9" fill="#8a6141" opacity=".6"/><circle cx={x} cy={y-2} r={i%2?8:10} fill={T.hillNear}/></g>)}
+      <path d="M0 238 Q80 206 160 230 T300 222 V300H0Z" fill={T.hillNear}/>
+      <path d={`M0 ${groundY} Q150 ${groundY-16} 300 ${groundY} L300 300 L0 300 Z`} fill={`url(#${uid}g)`}/>
+      <ellipse cx="150" cy="256" rx="70" ry="12" fill="rgba(0,0,0,.09)"/>
+      {tufts}{fence}
       {deco}
       <g className="tree-sway" style={ faded ? { filter: "saturate(.7) brightness(.97)" } : null}>
         <g style={ wilt ? { transform:`translateY(${droop*3}px)` } : null}>
@@ -983,9 +1159,8 @@ function TreeScene({ stats, treeType, unlocked, night, mini, acornCount = 3 }) {
         </g>
         {fallers}
       </g>
-      {animals}
-      {flyers}
-      {flies}
+      {buddy}{animals}{flyers}{flies}
+      <rect width="300" height="300" fill={T.night ? "#1a2050" : T.dusk ? "#ff8a50" : "#fff6c8"} opacity={T.night ? .16 : T.dusk ? .09 : .05} pointerEvents="none"/>
     </svg>
   );
 }
@@ -993,6 +1168,169 @@ function TreeScene({ stats, treeType, unlocked, night, mini, acornCount = 3 }) {
 /* =====================================================================
    MODULE: UI helpers
    ===================================================================== */
+/* ===== time of day (follows the phone clock) ===== */
+const hexRGB = h => [1,3,5].map(i => parseInt(h.slice(i,i+2),16));
+const lerpHex = (a,b,t) => { const A=hexRGB(a), B=hexRGB(b); return "#"+A.map((v,i)=>Math.round(v+(B[i]-v)*t).toString(16).padStart(2,"0")).join(""); };
+// hour, sky top, sky bottom, far hill, near hill, ground top, ground bottom, star opacity
+const TOD_KEYS = [
+  [0,"#1b2a4a","#3b4d7a","#2f4a5e","#2b4a45","#38566a","#2b4a45",1],
+  [5,"#1f2f55","#4a5a8c","#34506a","#2e5048","#3b5d6c","#2e5048",1],
+  [6.5,"#ffb199","#ffe2a8","#9cc7a0","#7fc77a","#8fd36c","#66b955",.15],
+  [9,"#8fd8f5","#e4f8d8","#9bdc9a","#7fd070","#86d466","#5fb84a",0],
+  [13,"#7cd0f7","#dff6e6","#8fd890","#74cc66","#82d462","#5cb548",0],
+  [17,"#9fd6ee","#ffe9b8","#a6d68a","#86c964","#8ccf5c","#63b044",0],
+  [19,"#ff9f7a","#ffd6a0","#b08aa8","#7aa86a","#82b45a","#5a9a48",.2],
+  [20.5,"#2a3358","#5b5f8f","#3b4a6a","#34536a","#3e5f6e","#2f5048",.9],
+  [24,"#1b2a4a","#3b4d7a","#2f4a5e","#2b4a45","#38566a","#2b4a45",1],
+];
+function todAt(h) {
+  let i = 0; while (i < TOD_KEYS.length-2 && h >= TOD_KEYS[i+1][0]) i++;
+  const a = TOD_KEYS[i], b = TOD_KEYS[i+1], t = Math.max(0, Math.min(1, (h-a[0])/(b[0]-a[0])));
+  const L = k => lerpHex(a[k], b[k], t);
+  const stars = a[7] + (b[7]-a[7])*t;
+  const sunUp = h >= 6 && h < 19.5;
+  const p = sunUp ? (h-6)/13.5 : ((h >= 19.5 ? h-19.5 : h+4.5)/10);
+  return { h, top:L(1), bot:L(2), hillFar:L(3), hillNear:L(4), g1:L(5), g2:L(6), stars, night: stars > .5, sunUp,
+           orb:{ x: 40+Math.min(1,p)*220, y: 130-Math.sin(Math.min(1,p)*Math.PI)*95 }, dusk: (h>=17 && h<20.5) || (h>=5 && h<8) };
+}
+const nowH = () => { const d = new Date(); return d.getHours() + d.getMinutes()/60; };
+const TOD_DAY = todAt(12);
+function useTod(override) {
+  const [h, setH] = useState(nowH);
+  useEffect(() => { const iv = setInterval(() => setH(nowH()), 30000); return () => clearInterval(iv); }, []);
+  return todAt(override != null ? override : h);
+}
+const SCENE_OPTS = [["auto","Auto (follow my phone clock)"],["6.5","Sunrise"],["9","Morning"],["13","Midday"],["17","Golden afternoon"],["19","Sunset"],["22","Night"]];
+
+/* ===== calculator ===== */
+const isOp = c => "+−×÷".includes(c);
+function evalExpr(str) {
+  const t = str.replace(/[+−×÷]$/, ""); if (!t) return 0;
+  const tok = t.match(/\d*\.?\d+|[+−×÷]/g) || [];
+  const out = [parseFloat(tok[0])], adds = [];
+  for (let i = 1; i < tok.length; i += 2) {
+    const op = tok[i], n = parseFloat(tok[i+1]);
+    if (op === "×") out[out.length-1] *= n;
+    else if (op === "÷") out[out.length-1] = n ? out[out.length-1]/n : 0;
+    else { adds.push(op); out.push(n); }
+  }
+  let r = out[0]; adds.forEach((op,i) => { r += op === "+" ? out[i+1] : -out[i+1]; });
+  return Math.round(r*100)/100;
+}
+function pressKey(e, k) {
+  const last = e.slice(-1);
+  if (k === "C") return "";
+  if (k === "⌫") return e.slice(0,-1);
+  if (k === "=") { if (!/[+−×÷]/.test(e)) return e; const v = evalExpr(e); return v > 0 ? String(v) : ""; }
+  if (e.length >= 24) return e;
+  if (isOp(k)) { if (!e) return e; return isOp(last) ? e.slice(0,-1)+k : e+k; }
+  const cur = (e.match(/[\d.]*$/) || [""])[0];
+  if (k === ".") { if (cur.includes(".")) return e; return cur === "" ? e+"0." : e+"."; }
+  if (cur.includes(".") && cur.split(".")[1].length >= 2) return e;
+  if (cur === "0") return e.slice(0,-1)+k;
+  if (cur.length >= 8 && !cur.includes(".")) return e;
+  return e+k;
+}
+const fmtNum = v => v % 1 === 0 ? String(v) : v.toFixed(2);
+const DOW = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"];
+function dayLabel(k) {
+  if (k === dayKey(now())) return "Today";
+  if (k === dayKey(now()-86400000)) return "Yesterday";
+  const d = new Date(k+"T12:00:00"); return `${DOW[d.getDay()]} ${d.getDate()} ${MONTH_NAMES[d.getMonth()].slice(0,3)}`;
+}
+function CalcPad({ expr, setExpr, calc }) {
+  const press = k => setExpr(e => pressKey(e, k));
+  if (!calc) return (
+    <div className="keypad">
+      {["1","2","3","4","5","6","7","8","9",".","0","⌫"].map(k => <button key={k} className="key" onClick={()=>press(k)} aria-label={k==="⌫"?"Delete":k}>{k}</button>)}
+    </div>);
+  const K = (k, cls, st) => <button key={k} className={"key"+(cls?" "+cls:"")} style={st} onClick={()=>press(k)}>{k}</button>;
+  return (
+    <div className="calc-grid">
+      {K("C","op")}{K("⌫","op")}{K("÷","op")}{K("×","op")}
+      {K("7")}{K("8")}{K("9")}{K("−","op")}
+      {K("4")}{K("5")}{K("6")}{K("+","op")}
+      {K("1")}{K("2")}{K("3")}
+      {K("=","eq",{gridColumn:4,gridRow:"4 / span 2",height:"100%"})}
+      {K("0","",{gridColumn:"1 / span 2",gridRow:5})}{K(".","",{gridColumn:3,gridRow:5})}
+    </div>);
+}
+function CalcSheet({ cur, onClose, onUse }) {
+  const [expr, setExpr] = useState("");
+  const hasOp = /[+−×÷]/.test(expr); const v = hasOp ? evalExpr(expr) : parseFloat(expr||"0");
+  return (
+    <div className="sheet-scrim" onClick={onClose}>
+      <div className="sheet" onClick={e=>e.stopPropagation()}>
+        <div className="grabber"/>
+        <div className="sheet-scroll">
+          <div className="amount-display">
+            <div className="q">🧮 Calculator</div>
+            <div className="expr">{hasOp ? expr : ""}</div>
+            <div className="val serif tnum"><span className="cur">{cur}</span>{hasOp ? fmtNum(v) : (expr||"0")}</div>
+          </div>
+          <CalcPad expr={expr} setExpr={setExpr} calc/>
+        </div>
+        <div className="sheet-foot"><button className="save-btn" disabled={!(v>0)} onClick={()=>onUse(v)}>Use in a new entry ✨</button></div>
+      </div>
+    </div>);
+}
+
+/* ===== History ===== */
+function History({ state, cur, onEdit, onAddDay }) {
+  const curCk = cycleKey(now());
+  const minCk = useMemo(() => state.expenses.reduce((m,e) => { const k = cycleKey(e.ts); return k < m ? k : m; }, curCk), [state.expenses]);
+  const [ck, setCk] = useState(curCk);
+  const [filter, setFilter] = useState("all");
+  const [y, m] = ck.split("-").map(Number);
+  const prev = prevCycleKey(ck), next = ymKey(y, m);
+  const st = cycleStartDate(ck), nx = cycleStartDate(next), en = new Date(nx.getFullYear(), nx.getMonth(), nx.getDate()-1);
+  const fmt = d => d.getDate()+" "+MONTH_NAMES[d.getMonth()].slice(0,3);
+  const all = state.expenses.filter(e => cycleKey(e.ts) === ck);
+  const spent = all.filter(e => typeOf(e)==="expense").reduce((a,e)=>a+e.amount,0);
+  const earned = all.filter(e => typeOf(e)==="income").reduce((a,e)=>a+e.amount,0);
+  const list = all.filter(e => filter==="all" || (filter==="spent") === (typeOf(e)==="expense"));
+  const days = [...new Set(list.map(e => dayKey(e.ts)))].sort().reverse();
+  return (
+    <div className="screen fade-in">
+      <div className="topbar"><div className="brand"><div className="logo">📖</div><h1 className="serif">History</h1></div></div>
+      <div className="scroll">
+        <div className="cycnav">
+          <button className="iconbtn" disabled={ck <= minCk} onClick={()=>setCk(prev)} aria-label="Earlier">‹</button>
+          <div className="mid"><b>{monthLabel(ck)}</b><span>{fmt(st)} – {fmt(en)}</span></div>
+          <button className="iconbtn" disabled={ck >= curCk} onClick={()=>setCk(next)} aria-label="Later">›</button>
+        </div>
+        <div className="statgrid" style={{gridTemplateColumns:"1fr 1fr 1fr"}}>
+          <div className="stat"><div className="k">Spent</div><div className="v tnum" style={{fontSize:17}}>{money(cur,spent)}</div></div>
+          <div className="stat"><div className="k">Earned</div><div className="v tnum" style={{fontSize:17,color:"var(--good)"}}>{money(cur,earned)}</div></div>
+          <div className="stat"><div className="k">Net</div><div className="v tnum" style={{fontSize:17,color:earned-spent>=0?"var(--good)":"var(--alert)"}}>{money(cur,earned-spent)}</div></div>
+        </div>
+        <div className="spacer-14"/>
+        <div className="seg">
+          {[["all","All"],["spent","💸 Spent"],["earned","💼 Earned"]].map(([k,l])=><button key={k} className={filter===k?"on":""} onClick={()=>setFilter(k)}>{l}</button>)}
+        </div>
+        {days.length === 0 && <div className="empty"><div className="e">🍃</div><div style={{fontWeight:700,marginTop:6}}>Nothing here yet</div><div className="hint">Tap a row to edit it, or add to any past day from the + button.</div></div>}
+        {days.map(d => {
+          const items = list.filter(e => dayKey(e.ts)===d).sort((a,b)=>b.ts-a.ts);
+          const net = items.reduce((a,e)=>a+(typeOf(e)==="income"?e.amount:-e.amount),0);
+          return (
+            <div key={d}>
+              <div className="dayhead"><b>{dayLabel(d)}</b>
+                <span className="tnum">{net>=0?"+":""}{money(cur,net)} <button className="linkish" style={{padding:"2px 6px"}} onClick={()=>onAddDay(d)} aria-label="Add to this day">＋ add</button></span></div>
+              <div className="card" style={{padding:"4px 14px"}}>
+                {items.map(e => { const inc = typeOf(e)==="income"; return (
+                  <div className="row tap" key={e.id} onClick={()=>onEdit(e)}>
+                    <div className="emoji">{catInfo(e.category).emoji}</div>
+                    <div className="grow"><div className="name">{catInfo(e.category).label}{inc&&" · earned"}</div>{e.note && <div className="meta">{e.note}</div>}</div>
+                    <div className="amt tnum" style={inc?{color:"var(--good)"}:null}>{inc?"+":""}{money(cur,e.amount)}</div>
+                  </div>);})}
+              </div>
+            </div>);
+        })}
+        <div className="spacer-20"/>
+      </div>
+    </div>);
+}
+
 function money(cur, n) {
   const neg = n < 0; n = Math.abs(n);
   const s = n % 1 === 0 ? n.toLocaleString() : n.toLocaleString(undefined,{minimumFractionDigits:2,maximumFractionDigits:2});
@@ -1003,7 +1341,7 @@ function pct(n) { return Math.round(n); }
 /* =====================================================================
    MODULE: Screens
    ===================================================================== */
-function Home({ state, stats, cur, onAdd, goTree, goSettings, night }) {
+function Home({ state, stats, cur, onAdd, goTree, goSettings, night, tod, onEdit, goHistory, goCalc }) {
   const budgetUsed = stats.monthBudget ? (stats.monthSpent/stats.monthBudget) : 0;
   const left = stats.monthBudget - stats.monthSpent;
   const barColor = budgetUsed >= 1 ? "var(--alert)" : budgetUsed >= .85 ? "var(--warn)" : "linear-gradient(90deg,var(--leaf-lite),var(--leaf))";
@@ -1016,13 +1354,13 @@ function Home({ state, stats, cur, onAdd, goTree, goSettings, night }) {
     <div className="screen fade-in">
       <div className="topbar">
         <div className="brand"><div className="logo">🌳</div><h1 className="serif">Little Forest</h1></div>
-        <button className="iconbtn" onClick={goSettings} aria-label="Settings">⚙️</button>
+        <div style={{display:"flex",gap:8}}><button className="iconbtn" onClick={goCalc} aria-label="Calculator">🧮</button><button className="iconbtn" onClick={goSettings} aria-label="Settings">⚙️</button></div>
       </div>
       <div className="scroll">
         <div className="scene-wrap" onClick={goTree} role="button" aria-label="Open My Tree">
-          <div className={"scene"+(night?" night":"")}>
-            <div className="sun-orb"/>
-            <TreeScene stats={stats} treeType={stats.treeType} unlocked={stats.rewardKeys} night={night} acornCount={stats.acornCount}/>
+          <div className="scene" style={{background:`linear-gradient(180deg,${tod.top},${tod.bot})`}}>
+            
+            <TreeScene stats={stats} treeType={stats.treeType} unlocked={stats.rewardKeys} night={tod.night} tod={tod} acornCount={stats.acornCount}/>
           </div>
         </div>
         <div className="spacer-14"/>
@@ -1061,14 +1399,14 @@ function Home({ state, stats, cur, onAdd, goTree, goSettings, night }) {
         {alert && <><div className="spacer-14"/><div className="insight"><div className="ie">{alert.e}</div><div><div style={{fontWeight:800,fontSize:14}}>{alert.t}</div><div className="hint">{alert.d}</div></div></div></>}
 
         <div className="spacer-20"/>
-        <div className="section-title">Today</div>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}><div className="section-title">Today</div><button className="linkish" onClick={goHistory}>📖 History →</button></div>
         <div className="card" style={{padding:"6px 16px"}}>
           {stats.todays.length === 0 ? (
             <div className="empty" style={{padding:"22px"}}><div className="e">🍃</div><div style={{fontWeight:700,marginTop:6}}>Nothing logged yet today</div><div className="hint">Tap the big button to add your first entry — it takes 5 seconds.</div></div>
           ) : stats.todays.map(e => {
             const inc = typeOf(e) === "income";
             return (
-              <div className="row" key={e.id}>
+              <div className="row tap" key={e.id} onClick={()=>onEdit(e)}>
                 <div className="emoji" style={inc?{background:"color-mix(in srgb,var(--good) 18%,var(--surface-2))"}:null}>{catInfo(e.category).emoji}</div>
                 <div className="grow"><div className="name">{catInfo(e.category).label}{inc && " · earned"}</div>{e.note && <div className="meta">{e.note}</div>}</div>
                 <div className="amt tnum" style={inc?{color:"var(--good)"}:null}>{inc?"+":""}{money(cur, e.amount)}</div>
@@ -1083,7 +1421,7 @@ function Home({ state, stats, cur, onAdd, goTree, goSettings, night }) {
   );
 }
 
-function TreePage({ stats, cur, night, goForest }) {
+function TreePage({ stats, cur, night, tod, goForest }) {
   const unlockedAch = ACHIEVEMENTS.filter(a => stats.unlocked.includes(a.id));
   const friends = ACHIEVEMENTS.filter(a => a.reward.kind==="animal");
   const decos = ACHIEVEMENTS.filter(a => a.reward.kind==="nature");
@@ -1093,9 +1431,9 @@ function TreePage({ stats, cur, night, goForest }) {
       <div className="topbar"><div className="brand"><div className="logo">🌱</div><h1 className="serif">My Tree</h1></div>
         <div className="chip">🌳 {STAGE_NAMES[stats.stage]}</div></div>
       <div className="scroll">
-        <div className={"scene"+(night?" night":"")} style={{aspectRatio:"1/1.05"}}>
-          <div className="sun-orb"/>
-          <TreeScene stats={stats} treeType={stats.treeType} unlocked={stats.rewardKeys} night={night} acornCount={stats.acornCount}/>
+        <div className="scene" style={{aspectRatio:"1/1.05",background:`linear-gradient(180deg,${tod.top},${tod.bot})`}}>
+          
+          <TreeScene stats={stats} treeType={stats.treeType} unlocked={stats.rewardKeys} night={tod.night} tod={tod} acornCount={stats.acornCount}/>
         </div>
         <div className="spacer-14"/>
         <div style={{display:"flex",justifyContent:"center",alignItems:"center",gap:8,flexWrap:"wrap"}}>
@@ -1300,7 +1638,7 @@ function Forest({ state, stats, cur, night }) {
             return (
               <div className="forest-tile" key={mk}>
                 <div className="mini">
-                  <TreeScene stats={tileStats} treeType={tType} unlocked={isCur?[...decoKeys,...animalKeys]:decoKeys} night={false} mini acornCount={tileAcorns}/>
+                  <TreeScene stats={tileStats} treeType={tType} unlocked={isCur?[...decoKeys,...animalKeys]:decoKeys} night={false} tod={TOD_DAY} mini acornCount={tileAcorns}/>
                 </div>
                 <div className="fm">
                   <div className="mo">{monthShort(mk)}</div>
@@ -1336,12 +1674,14 @@ function Settings({ state, stats, cur, dispatch, onClose }) {
   const [confirmClear, setConfirmClear] = useState(false);
   const [perm, setPerm] = useState(notifPerm());
   const [testMsg, setTestMsg] = useState("");
+  const [scene, setScene] = useState(state.prefs.sceneTime || "auto");
 
   const save = () => {
     const b = parseFloat(budget); if (!isNaN(b) && b>0) dispatch({type:"SET_BUDGET", amount:b});
     dispatch({type:"SET_CURRENCY", currency});
     dispatch({type:"SET_CYCLE_START", day: Number(startDay)});
     dispatch({type:"SET_REMINDERS", reminders});
+    dispatch({type:"SET_SCENE", v: scene});
     onClose();
   };
   const toggleReminder = (id) => setReminders(rs => rs.map(r=>r.id===id?{...r,enabled:!r.enabled}:r));
@@ -1386,6 +1726,14 @@ function Settings({ state, stats, cur, dispatch, onClose }) {
             <select value={currency} onChange={e=>setCurrency(e.target.value)}>
               {["$","£","€","¥","₹","₩","R$","A$","C$","kr","zł"].map(c=><option key={c} value={c}>{c}</option>)}
             </select>
+          </div>
+        </div>
+        <div className="spacer-14"/>
+        <div className="card">
+          <div className="field" style={{margin:0}}>
+            <label>Forest scene time</label>
+            <select value={scene} onChange={e=>setScene(e.target.value)}>{SCENE_OPTS.map(([v,l])=><option key={v} value={v}>{l}</option>)}</select>
+            <div className="hint" style={{marginTop:6}}>Auto changes the sky from sunrise to night with your phone's clock. Pick a time to preview it.</div>
           </div>
         </div>
         <div className="spacer-14"/>
@@ -1448,47 +1796,56 @@ function Settings({ state, stats, cur, dispatch, onClose }) {
 /* =====================================================================
    MODULE: Add sheet  (target: under 5 seconds)
    ===================================================================== */
-function AddSheet({ state, cur, onClose, onSave, capMode, capAmount, capCat }) {
+function AddSheet({ state, cur, onClose, onSave, onDelete, edit, initialDay, initialAmount, capMode, capAmount, capCat }) {
   const recentCat = useMemo(() => {
     const last = [...state.expenses].filter(e=>typeOf(e)==="expense").sort((a,b)=>b.ts-a.ts)[0];
     return last ? last.category : "food";
   }, [state.expenses]);
-  const [mode, setMode] = useState(capMode || "expense");      // "expense" | "income"
-  const [amount, setAmount] = useState(capAmount || "");
-  const [category, setCategory] = useState(capCat || (capMode === "income" ? "salary" : recentCat));
-  const [showNote, setShowNote] = useState(false);
-  const [note, setNote] = useState("");
+  const [mode, setMode] = useState(edit ? typeOf(edit) : (capMode || "expense"));
+  const [expr, setExpr] = useState(edit ? String(edit.amount) : (initialAmount != null ? fmtNum(initialAmount) : (capAmount || "")));
+  const [category, setCategory] = useState(edit ? edit.category : (capCat || (capMode === "income" ? "salary" : recentCat)));
+  const [note, setNote] = useState(edit ? (edit.note||"") : "");
+  const [showNote, setShowNote] = useState(!!(edit && edit.note));
+  const [day, setDay] = useState(edit ? dayKey(edit.ts) : (initialDay || dayKey(now())));
+  const [calc, setCalc] = useState(false);
+  const [confirmDel, setConfirmDel] = useState(false);
+  const today = dayKey(now());
   const cats = mode === "income" ? INCOME_CATS : CATEGORIES;
   const switchMode = (m) => { setMode(m); setCategory(m === "income" ? "salary" : recentCat); };
-
-  const pushDigit = (d) => setAmount(a => {
-    if (d==="." && a.includes(".")) return a;
-    if (a.includes(".") && a.split(".")[1].length>=2) return a;
-    if (a==="0" && d!==".") return d;
-    if (a.length>=8) return a;
-    return a + d;
-  });
-  const back = () => setAmount(a => a.slice(0,-1));
-  const value = parseFloat(amount||"0");
+  const hasOp = /[+−×÷]/.test(expr);
+  const value = hasOp ? evalExpr(expr) : parseFloat(expr||"0");
   const canSave = value > 0;
-
-  const doSave = () => { if (canSave) onSave(value, category, note.trim(), mode); };
-
+  const shift = (n) => { const d = new Date(day+"T12:00:00"); d.setDate(d.getDate()+n); const k = dayKey(d); if (k <= today) setDay(k); };
+  const toggleCalc = () => { if (calc && hasOp) setExpr(value > 0 ? fmtNum(value) : ""); setCalc(c => !c); };
+  const doSave = () => {
+    if (!canSave) return;
+    const same = edit && dayKey(edit.ts) === day;
+    const ts = same ? edit.ts : (day === today ? now() : new Date(day+"T12:00:00").getTime());
+    onSave(value, category, note.trim(), mode, ts, edit ? edit.id : null);
+  };
   return (
     <div className="sheet-scrim" onClick={onClose}>
       <div className="sheet" onClick={e=>e.stopPropagation()}>
         <div className="grabber"/>
         <div className="sheet-scroll">
-        <div className="seg" style={{marginBottom:6}}>
+        <div className="seg" style={{marginBottom:8}}>
           <button className={mode==="expense"?"on":""} onClick={()=>switchMode("expense")}>💸 Spent</button>
           <button className={mode==="income"?"on":""} onClick={()=>switchMode("income")}>💼 Earned</button>
         </div>
+        <div className="daterow">
+          <button className="iconbtn sm" onClick={()=>shift(-1)} aria-label="Previous day">‹</button>
+          <label className="datepill">📅 {dayLabel(day)}{day!==today && <em>back-dated</em>}
+            <input type="date" value={day} max={today} onChange={e=>e.target.value && setDay(e.target.value)}/></label>
+          <button className="iconbtn sm" disabled={day>=today} onClick={()=>shift(1)} aria-label="Next day">›</button>
+        </div>
         <div className="amount-display">
-          <div className="q">{mode==="income"?"How much came in?":"How much?"}</div>
-          <div className={"val serif tnum"+(amount?"":" empty")} style={mode==="income"?{color:"var(--good)"}:null}><span className="cur">{cur}</span>{amount||"0"}</div>
+          <button className={"calc-toggle"+(calc?" on":"")} onClick={toggleCalc} aria-label="Calculator">🧮</button>
+          <div className="q">{edit ? "Edit entry" : mode==="income" ? "How much came in?" : "How much?"}</div>
+          <div className="expr">{hasOp ? expr : ""}</div>
+          <div className={"val serif tnum"+(expr?"":" empty")} style={mode==="income"?{color:"var(--good)"}:null}><span className="cur">{cur}</span>{hasOp ? fmtNum(value) : (expr||"0")}</div>
         </div>
         <div className="recent-lbl">{mode==="income"?"Source":"Category"}</div>
-        <div className="catgrid" style={mode==="income"?{gridTemplateColumns:"repeat(3,1fr)"}:null}>
+        <div className="catgrid">
           {cats.map(c => (
             <button key={c.key} className={"cat"+(category===c.key?" sel":"")} onClick={()=>setCategory(c.key)}>
               <span className="ce">{c.emoji}</span>{c.label}
@@ -1500,13 +1857,13 @@ function AddSheet({ state, cur, onClose, onSave, capMode, capAmount, capCat }) {
         ) : (
           <div style={{textAlign:"center"}}><button className="linkish" onClick={()=>setShowNote(true)}>+ Add a note</button></div>
         )}
-        <div className="keypad">
-          {["1","2","3","4","5","6","7","8","9",".","0"].map(k => <button key={k} className="key" onClick={()=>pushDigit(k)}>{k}</button>)}
-          <button className="key" onClick={back} aria-label="Delete">⌫</button>
-        </div>
+        <CalcPad expr={expr} setExpr={setExpr} calc={calc}/>
         </div>
         <div className="sheet-foot">
-        <button className="save-btn" disabled={!canSave} onClick={doSave}>Save {canSave?money(cur,value):""} ✨</button>
+        <button className="save-btn" disabled={!canSave} onClick={doSave}>{edit?"Update":"Save"} {canSave?money(cur,value):""} ✨</button>
+        {edit && (confirmDel
+          ? <button className="ghost-btn danger" style={{marginTop:8}} onClick={()=>onDelete(edit.id)}>Tap again to delete this entry</button>
+          : <button className="linkish danger" style={{width:"100%",marginTop:4}} onClick={()=>setConfirmDel(true)}>🗑 Delete entry</button>)}
         </div>
       </div>
     </div>
@@ -1608,6 +1965,10 @@ function App() {
   const [showAdd, setShowAdd] = useState(CAP === "add" || CAP === "add-earned");
   const [reward, setReward] = useState(CAP === "reward" ? { amount: 6.5, recovered: false, kind: "expense", hold: true } : null);
   const [toasts, setToasts] = useState([]);
+  const [editing, setEditing] = useState(null);
+  const [addDay, setAddDay] = useState(null);
+  const [addAmt, setAddAmt] = useState(null);
+  const [showCalc, setShowCalc] = useState(false);
   const prevUnlocked = useRef(null);
   const firedRef = useRef({});
 
@@ -1630,8 +1991,9 @@ function App() {
   setCycleStartDay(state.prefs.cycleStartDay);   // keep cycle math in sync before deriving stats
   const stats = useMemo(() => buildStats(state), [state]);
   const cur = state.prefs.currency;
-  const hour = new Date().getHours();
-  const night = hour >= 19 || hour < 6;
+  const sc = state.prefs.sceneTime;
+  const tod = useTod(sc == null || sc === "auto" ? null : Number(sc));
+  const night = tod.night;
 
   // initialise seen achievements baseline on first mount
   useEffect(() => {
@@ -1657,12 +2019,16 @@ function App() {
     return () => clearInterval(iv);
   }, [state.prefs.reminders]);
 
-  const handleSave = (amount, category, note, kind) => {
+  const closeAdd = () => { setShowAdd(false); setEditing(null); setAddDay(null); setAddAmt(null); };
+  const openEdit = (e) => { setEditing(e); setShowAdd(true); };
+  const openAddDay = (d, amt) => { setAddDay(d || null); setAddAmt(amt == null ? null : amt); setShowAdd(true); };
+  const handleSave = (amount, category, note, kind, ts, editId) => {
+    if (editId) { dispatch({ type:"UPDATE", id:editId, patch:{ amount, category, note, type:kind, ts } }); closeAdd(); return; }
     const wasWilting = stats.health < 70;
     const before = new Set(stats.unlocked);
-    const action = { type:"ADD", amount, category, note, kind };
+    const action = { type:"ADD", amount, category, note, kind, ts };
     dispatch(action);
-    setShowAdd(false);
+    closeAdd();
     setReward({ amount, recovered: wasWilting, kind });
     // detect new achievements after state settles
     setTimeout(() => {
@@ -1677,8 +2043,9 @@ function App() {
 
   return (
     <div className="phone">
-      {tab==="home" && <Home state={state} stats={stats} cur={cur} night={night} goTree={()=>setTab("tree")} goSettings={()=>setTab("settings")}/>}
-      {tab==="tree" && <TreePage stats={stats} cur={cur} night={night} goForest={()=>setTab("forest")}/>}
+      {tab==="home" && <Home state={state} stats={stats} cur={cur} night={night} goTree={()=>setTab("tree")} goSettings={()=>setTab("settings")} tod={tod} onEdit={openEdit} goHistory={()=>setTab("history")} goCalc={()=>setShowCalc(true)}/>}
+      {tab==="tree" && <TreePage stats={stats} cur={cur} night={night} tod={tod} goForest={()=>setTab("forest")}/>}
+      {tab==="history" && <History state={state} cur={cur} onEdit={openEdit} onAddDay={(d)=>openAddDay(d)}/>}
       {tab==="reports" && <Reports state={state} stats={stats} cur={cur} initTab={CAP==="report-month"?"month":undefined}/>}
       {tab==="forest" && <Forest state={state} stats={stats} cur={cur} night={night}/>}
       {tab==="settings" && <Settings state={state} stats={stats} cur={cur} dispatch={dispatch} onClose={()=>setTab("home")}/>}
@@ -1686,18 +2053,18 @@ function App() {
       {tab!=="settings" && (
         <div className="nav">
           <button className={tab==="home"?"on":""} onClick={()=>setTab("home")}><span className="ic">🏡</span>Home</button>
-          <button className={tab==="tree"?"on":""} onClick={()=>setTab("tree")}><span className="ic">🌱</span>Tree</button>
-          <button className="addbtn" onClick={()=>setShowAdd(true)} aria-label="Add expense">+
-          </button>
+          <button className={tab==="tree"||tab==="forest"?"on":""} onClick={()=>setTab("tree")}><span className="ic">🌱</span>Tree</button>
+          <button className="addbtn" onClick={()=>openAddDay()} aria-label="Add entry">+</button>
+          <button className={tab==="history"?"on":""} onClick={()=>setTab("history")}><span className="ic">📖</span>History</button>
           <button className={tab==="reports"?"on":""} onClick={()=>setTab("reports")}><span className="ic">📊</span>Reports</button>
-          <button className={tab==="forest"?"on":""} onClick={()=>setTab("forest")}><span className="ic">🌲</span>Forest</button>
         </div>
       )}
 
-      {showAdd && <AddSheet state={state} cur={cur} onClose={()=>setShowAdd(false)} onSave={handleSave}
+      {showAdd && <AddSheet state={state} cur={cur} onClose={closeAdd} onSave={handleSave} onDelete={(id)=>{dispatch({type:"DELETE",id});closeAdd();}} edit={editing} initialDay={addDay} initialAmount={addAmt}
         capMode={CAP==="add-earned"?"income":undefined}
         capAmount={CAP==="add"?"6.50":CAP==="add-earned"?"1200":undefined}
         capCat={CAP==="add"?"food":CAP==="add-earned"?"salary":undefined}/>}
+      {showCalc && <CalcSheet cur={cur} onClose={()=>setShowCalc(false)} onUse={(v)=>{setShowCalc(false);openAddDay(null,v);}}/>}
       {reward && <RewardOverlay cur={cur} amount={reward.amount} recovered={reward.recovered} kind={reward.kind} hold={reward.hold} onDone={()=>setReward(null)}/>}
       <Toasts items={toasts} onExpire={()=>setToasts([])}/>
     </div>

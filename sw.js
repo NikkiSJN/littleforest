@@ -1,5 +1,5 @@
 /* Little Forest — service worker: offline app shell + notifications */
-const CACHE = "little-forest-v5";
+const CACHE = "little-forest-v6";
 const ASSETS = ["./", "./index.html", "./manifest.webmanifest", "./icon.svg"];
 
 self.addEventListener("install", (e) => {
